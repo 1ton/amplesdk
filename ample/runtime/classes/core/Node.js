@@ -608,7 +608,7 @@ function fNode_executeHandler(oNode, fHandler, oEvent) {
 			fHandler.call(oNode, oEvent);
 		else
 		if (typeof fHandler.handleEvent == "function")
-			fHandler.handleEvent.call(fHandler, oEvent);
+			fHandler.handleEvent(oEvent);
 //->Guard
 		else
 			throw new cDOMException(cDOMException.GUARD_MEMBER_MISSING_ERR, null, ["handleEvent"]);
@@ -616,9 +616,15 @@ function fNode_executeHandler(oNode, fHandler, oEvent) {
 	}
 	catch (oException) {
 		if (oException instanceof cDOMException) {
-			var oErrorHandler	= oDOMConfiguration_values["error-handler"];
-			if (oErrorHandler)
-				oErrorHandler.handleError(new cDOMError(oException.message, cDOMError.SEVERITY_ERROR, oException));
+			var fErrorHandler	= oDOMConfiguration_values["error-handler"];
+			if (fErrorHandler) {
+				var oError	= new cDOMError(oException.message, cDOMError.SEVERITY_ERROR, oException);
+				if (typeof fErrorHandler == "function")
+					fErrorHandler(oError);
+				else
+				if (typeof fErrorHandler.handleError == "function")
+					fErrorHandler.handleError(oError);
+			}
 		}
 		throw oException;
 	}

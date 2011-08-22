@@ -40,10 +40,10 @@ function fQuery(vArgument1, vArgument2, vArgument3) {
 				// Context
 				if (arguments.length > 1) {
 //->Guard
-					if (!(vArgument2 instanceof cNode))
+					if (!(vArgument2 instanceof cNode) &&!(vArgument2 instanceof cQuery))
 						throw new cDOMException(cDOMException.GUARD_ARGUMENT_WRONG_TYPE_ERR, fQuery.caller
 	//->Debug
-							, ['2' + oGuard_endings[1], "context", "query", "Node"]
+							, ['2' + oGuard_endings[1], "context", "query", "Node" + '" ' + 'or' + ' "' + "Query"]
 	//<-Debug
 						);
 //<-Guard
@@ -70,7 +70,7 @@ function fQuery(vArgument1, vArgument2, vArgument3) {
 				// Invoke implementation
 				var aResult;
 				try {
-					aResult	= fNodeSelector_query([oQuery.context], vArgument1, vArgument3);
+					aResult	= fNodeSelector_query(vArgument2 instanceof cNode ? [vArgument2] : vArgument2, vArgument1, vArgument3);
 				}
 				catch (oException) {
 					// Re-point caller property and re-throw error
@@ -331,7 +331,7 @@ fDOMConfiguration_setParameter(oConfiguration, "error-handler", null);
 fDOMConfiguration_setParameter(oConfiguration, "element-content-whitespace", false);	// in DOM-Core spec the default value is true
 fDOMConfiguration_setParameter(oConfiguration, "entities", false);	// in DOM-Core spec the default value is true
 fDOMConfiguration_setParameter(oConfiguration, "comments", false); 	// in DOM-Core spec the default value is true
-//set ample parameters
+// set ample parameters
 fDOMConfiguration_setParameter(oConfiguration, "ample-module-history-fix", false);	// -> ample-history
 fDOMConfiguration_setParameter(oConfiguration, "ample-version", '@project.version@');
 fDOMConfiguration_setParameter(oConfiguration, "ample-locale", "en");
@@ -343,8 +343,7 @@ fDOMConfiguration_setParameter(oConfiguration, "ample-enable-transitions", true)
 
 //->Debug
 // Enable debugging
-var oAmple_errorHandler	= {};
-oAmple_errorHandler.handleError	= function(oError) {
+var fErrorHandler	= function(oError) {
 	var oConsole	= window.console;
 	if (oError.severity == cDOMError.SEVERITY_WARNING) {
 		// Warning in console
@@ -357,5 +356,5 @@ oAmple_errorHandler.handleError	= function(oError) {
 		oConsole.error(oError.message + '\n' + oError.relatedException.caller);
 	return false;
 };
-fDOMConfiguration_setParameter(oConfiguration, "error-handler", oAmple_errorHandler);
+fDOMConfiguration_setParameter(oConfiguration, "error-handler", fErrorHandler);
 //<-Debug
