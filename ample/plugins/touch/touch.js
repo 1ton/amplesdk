@@ -130,7 +130,7 @@ function fTouch_onTouchEnd(oEvent) {
 				// This is swipe
 				var sSwipeDirection	= '';
 				sSwipeDirection	= aTouchEvent_touches_history[i].deltaX > 0 ? 'left' : 'right';
-				if (Math.abs(aTouchEvent_touches_history[i].deltaY / aTouchEvent_touches_history[i].deltaX) >= 2) {
+				if (Math.abs(aTouchEvent_touches_history[i].deltaY) > Math.abs(aTouchEvent_touches_history[i].deltaX)) {
 					sSwipeDirection	= aTouchEvent_touches_history[i].deltaY > 0 ? 'up' : 'down';
 				}
 				var oSwipeEvent	= ample.createEvent("UIEvent");
