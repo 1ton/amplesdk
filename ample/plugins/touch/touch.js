@@ -10,11 +10,12 @@
 var oTouchEvent_touches				= {},
 	aTouchEvent_touches_history		= [],
 	nTouchEvent_pinch_last_distance	= 0,
+	nTouchEvent_double_taps			= 0,	// Nummber of taps in "doubletap" sequence
 	nTouchEvent_PINCH_THRESHOLD		= 1,	// Minimum distance to track pinch
 	nTouchEvent_TIME_TO_KEEP_TOUCH	= 2000,	// Milliseconds to keep touch object after it was ended or canceled
 	nTouchEvent_TAP_TIMER			= 170,	// Maximum number of milliseconds between start and end events to detect tap
 	nTouchEvent_TAPHOLD_TIMER		= 750,	// Time to wait for taphold
-	nTouchEvent_DOUBLETAP_TIMER		= 500,	// Maximum number of milliseconds between two taps to detect doubletap
+	nTouchEvent_DOUBLETAP_TIMER		= 300,	// Maximum number of milliseconds between two taps to detect doubletap
 	nTouchEvent_SWIPE_MIN_DISTANCE	= 30,	// Minimum distance to track swipe
 	nTouchEvent_DOUBLESWIPE_TIMER	= 500;	// Maximum number of milliseconds between two swipes to detect doubleswipe
 
@@ -85,14 +86,14 @@ function fTouch_onTouchEnd(oEvent) {
 	var oTouchesLeft	= {},
 		s	= '',
 		nCurrentTimestamp	= Number(new Date),
-		nTapsCount	= 0,
 		nSwipeCount	= {
 			'up'	: 0,
 			'down'	: 0,
 			'left'	: 0,
 			'right'	: 0
 		},
-		nDoubleTapsCount = 0;
+		bWasTapBefore	= false,
+		bIsTap			= false;
 	for (var i = 0; i < oEvent.touches.length; i++) {
 		oTouchesLeft[oEvent.touches[i].identifier] = oEvent.touches[i];
 	}
@@ -108,8 +109,8 @@ function fTouch_onTouchEnd(oEvent) {
 				&& aTouchEvent_touches_history[i].deltaX == 0 && aTouchEvent_touches_history[i].deltaY == 0
 				&& nCurrentTimestamp - aTouchEvent_touches_history[i].endTimestamp <= nTouchEvent_DOUBLETAP_TIMER
 				&& aTouchEvent_touches_history[i].endTimestamp - aTouchEvent_touches_history[i].startTimestamp <= nTouchEvent_TAP_TIMER) {
-			// This is double tap
-			nDoubleTapsCount++;
+			// This is a tap in "doubletap" sequence
+			bWasTapBefore	= true;
 		} else if (aTouchEvent_touches_history[i].endTimestamp
 				&& nCurrentTimestamp - aTouchEvent_touches_history[i].endTimestamp <= nTouchEvent_DOUBLESWIPE_TIMER
 				&& aTouchEvent_touches_history[i].swipe !== false) {
@@ -124,8 +125,8 @@ function fTouch_onTouchEnd(oEvent) {
 			if (oEvent.touches.length == 0
 					&& aTouchEvent_touches_history[i].deltaX == 0 && aTouchEvent_touches_history[i].deltaY == 0
 					&& aTouchEvent_touches_history[i].endTimestamp - aTouchEvent_touches_history[i].startTimestamp <= nTouchEvent_TAP_TIMER) {
-				// Counting taps
-				nTapsCount++;
+				// This is a tap
+				bIsTap = true;
 			} else if (Math.abs(aTouchEvent_touches_history[i].deltaX) >= nTouchEvent_SWIPE_MIN_DISTANCE || Math.abs(aTouchEvent_touches_history[i].deltaY) >= nTouchEvent_SWIPE_MIN_DISTANCE) {
 				// This is swipe
 				var sSwipeDirection	= '';
@@ -165,14 +166,21 @@ function fTouch_onTouchEnd(oEvent) {
 		}
 	}
 
-	if (nTapsCount) {
+	if (!bWasTapBefore) {
+		nTouchEvent_double_taps = 0;
+	}
+
+	if (bIsTap) {
+		if (bWasTapBefore) {
+			nTouchEvent_double_taps++;
+		}
 		var oTapEvent	= ample.createEvent("UIEvent");
-		oTapEvent.initUIEvent("tap", false, false, window, nTapsCount);
+		oTapEvent.initUIEvent("tap", true, false, window, nTouchEvent_double_taps + 1);
 		oEvent.target.dispatchEvent(oTapEvent);
 
-		if (nDoubleTapsCount) {
+		if (nTouchEvent_double_taps == 1) {
 			var oDoubleTapEvent	= ample.createEvent("UIEvent");
-			oDoubleTapEvent.initUIEvent("doubletap", false, false, window, Math.min(nTapsCount, nDoubleTapsCount));
+			oDoubleTapEvent.initUIEvent("doubletap", true, false, window, null);
 			oEvent.target.dispatchEvent(oDoubleTapEvent);
 		}
 	}
