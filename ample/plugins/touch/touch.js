@@ -7,8 +7,8 @@
  *
  */
 
-var nTouchEvent_touches = {},
-    nTouchEvent_touches_history = [],
+var oTouchEvent_touches = {},
+    aTouchEvent_touches_history = [],
     nTouchEvent_pinch_last_distance = 0,
     nTouchEvent_PINCH_THRESHOLD = 1,        // Minimum distance to track pinch
     nTouchEvent_TIME_TO_KEEP_TOUCH = 2000,  // Milliseconds to keep touch object after it was ended or canceled
@@ -21,26 +21,26 @@ var nTouchEvent_touches = {},
 function fTouch_onTouchStart(oEvent) {
   var bDoubleTapHold = false,
       nCurrentTimestamp = Number(new Date);
-  for (i in nTouchEvent_touches) {
-    if (nTouchEvent_touches[i].endTimestamp
-        && new Date - nTouchEvent_touches[i].endTimestamp > nTouchEvent_TIME_TO_KEEP_TOUCH) {
-      delete nTouchEvent_touches[i];
-    } else if (nCurrentTimestamp - nTouchEvent_touches[i].endTimestamp <= nTouchEvent_DOUBLETAP_TIMER) {
+  for (i in oTouchEvent_touches) {
+    if (oTouchEvent_touches[i].endTimestamp
+        && new Date - oTouchEvent_touches[i].endTimestamp > nTouchEvent_TIME_TO_KEEP_TOUCH) {
+      delete oTouchEvent_touches[i];
+    } else if (nCurrentTimestamp - oTouchEvent_touches[i].endTimestamp <= nTouchEvent_DOUBLETAP_TIMER) {
       bDoubleTapHold = true;
     }
   }
 
   for (var i=0; i< oEvent.touches.length; i++) {
-    if (!nTouchEvent_touches[oEvent.touches[i].identifier]) {
-      nTouchEvent_touches[oEvent.touches[i].identifier] = {};
-      nTouchEvent_touches[oEvent.touches[i].identifier].identifier = oEvent.touches[i].identifier;
-      nTouchEvent_touches[oEvent.touches[i].identifier].startX = oEvent.touches[i].pageX;
-      nTouchEvent_touches[oEvent.touches[i].identifier].lastX = oEvent.touches[i].pageX;
-      nTouchEvent_touches[oEvent.touches[i].identifier].startY = oEvent.touches[i].pageY;
-      nTouchEvent_touches[oEvent.touches[i].identifier].lastY = oEvent.touches[i].pageY;
-      nTouchEvent_touches[oEvent.touches[i].identifier].startTimestamp = Number(new Date);
-      nTouchEvent_touches[oEvent.touches[i].identifier].swipe = false;
-      nTouchEvent_touches[oEvent.touches[i].identifier].tapHoldTimer = setTimeout(function () {
+    if (!oTouchEvent_touches[oEvent.touches[i].identifier]) {
+      oTouchEvent_touches[oEvent.touches[i].identifier] = {};
+      oTouchEvent_touches[oEvent.touches[i].identifier].identifier = oEvent.touches[i].identifier;
+      oTouchEvent_touches[oEvent.touches[i].identifier].startX = oEvent.touches[i].pageX;
+      oTouchEvent_touches[oEvent.touches[i].identifier].lastX = oEvent.touches[i].pageX;
+      oTouchEvent_touches[oEvent.touches[i].identifier].startY = oEvent.touches[i].pageY;
+      oTouchEvent_touches[oEvent.touches[i].identifier].lastY = oEvent.touches[i].pageY;
+      oTouchEvent_touches[oEvent.touches[i].identifier].startTimestamp = Number(new Date);
+      oTouchEvent_touches[oEvent.touches[i].identifier].swipe = false;
+      oTouchEvent_touches[oEvent.touches[i].identifier].tapHoldTimer = setTimeout(function () {
           var oTapHoldEvent = ample.createEvent("UIEvents");
           oTapHoldEvent.initUIEvent("taphold", false, false, window, null);
           oEvent.target.dispatchEvent(oTapHoldEvent);
@@ -50,7 +50,7 @@ function fTouch_onTouchStart(oEvent) {
             oEvent.target.dispatchEvent(oDoubleTapHoldEvent);
           }
         }, nTouchEvent_TAPHOLD_TIMER);
-      nTouchEvent_touches_history[nTouchEvent_touches_history.length] = nTouchEvent_touches[oEvent.touches[i].identifier];
+      aTouchEvent_touches_history[aTouchEvent_touches_history.length] = oTouchEvent_touches[oEvent.touches[i].identifier];
     }
   }
   if (oEvent.touches.length == 2) {
@@ -61,10 +61,10 @@ function fTouch_onTouchStart(oEvent) {
 function fTouch_onTouchMove(oEvent) {
   for (var i=0; i< oEvent.touches.length; i++) {
     var nTouchId = oEvent.touches[i].identifier;
-    clearTimeout(nTouchEvent_touches[nTouchId].tapHoldTimer);
+    clearTimeout(oTouchEvent_touches[nTouchId].tapHoldTimer);
 
-    nTouchEvent_touches[nTouchId].lastX = oEvent.touches[i].pageX;
-    nTouchEvent_touches[nTouchId].lastY = oEvent.touches[i].pageY;
+    oTouchEvent_touches[nTouchId].lastX = oEvent.touches[i].pageX;
+    oTouchEvent_touches[nTouchId].lastY = oEvent.touches[i].pageY;
 
   }
   if (oEvent.touches.length == 2) {
@@ -95,42 +95,42 @@ function fTouch_onTouchEnd(oEvent) {
   for (var i=0; i<oEvent.touches.length; i++) {
     oTouchesLeft[oEvent.touches[i].identifier] = oEvent.touches[i];
   }
-  for (i=0; i<nTouchEvent_touches_history.length; i++) {
-    if (nTouchEvent_touches_history[i].endTimestamp
-        && nCurrentTimestamp - nTouchEvent_touches_history[i].endTimestamp > nTouchEvent_TIME_TO_KEEP_TOUCH) {
+  for (i=0; i<aTouchEvent_touches_history.length; i++) {
+    if (aTouchEvent_touches_history[i].endTimestamp
+        && nCurrentTimestamp - aTouchEvent_touches_history[i].endTimestamp > nTouchEvent_TIME_TO_KEEP_TOUCH) {
       // Touch is expired
-      delete nTouchEvent_touches[nTouchEvent_touches_history[i].id];
-      nTouchEvent_touches_history.splice(i, 1);
+      delete oTouchEvent_touches[aTouchEvent_touches_history[i].id];
+      aTouchEvent_touches_history.splice(i, 1);
       i--;
 
-    } else if (nTouchEvent_touches_history[i].endTimestamp
-        && nTouchEvent_touches_history[i].deltaX == 0 && nTouchEvent_touches_history[i].deltaY == 0
-        && nCurrentTimestamp - nTouchEvent_touches_history[i].endTimestamp <= nTouchEvent_DOUBLETAP_TIMER
-        && nTouchEvent_touches_history[i].endTimestamp - nTouchEvent_touches_history[i].startTimestamp <= nTouchEvent_TAP_TIMER) {
+    } else if (aTouchEvent_touches_history[i].endTimestamp
+        && aTouchEvent_touches_history[i].deltaX == 0 && aTouchEvent_touches_history[i].deltaY == 0
+        && nCurrentTimestamp - aTouchEvent_touches_history[i].endTimestamp <= nTouchEvent_DOUBLETAP_TIMER
+        && aTouchEvent_touches_history[i].endTimestamp - aTouchEvent_touches_history[i].startTimestamp <= nTouchEvent_TAP_TIMER) {
       // This is double tap
       nDoubleTapsCount++;
-    } else if (nTouchEvent_touches_history[i].endTimestamp
-        && nCurrentTimestamp - nTouchEvent_touches_history[i].endTimestamp <= nTouchEvent_DOUBLESWIPE_TIMER
-        && nTouchEvent_touches_history[i].swipe !== false) {
+    } else if (aTouchEvent_touches_history[i].endTimestamp
+        && nCurrentTimestamp - aTouchEvent_touches_history[i].endTimestamp <= nTouchEvent_DOUBLESWIPE_TIMER
+        && aTouchEvent_touches_history[i].swipe !== false) {
       // This is swipe
-      nSwipeCount[nTouchEvent_touches_history[i].swipe]++;
-    } else if (!nTouchEvent_touches_history[i].endTimestamp && !oTouchesLeft[nTouchEvent_touches_history[i].identifier]) {
+      nSwipeCount[aTouchEvent_touches_history[i].swipe]++;
+    } else if (!aTouchEvent_touches_history[i].endTimestamp && !oTouchesLeft[aTouchEvent_touches_history[i].identifier]) {
       // Touch is ended
-      nTouchEvent_touches_history[i].endTimestamp = nCurrentTimestamp;
-      nTouchEvent_touches_history[i].deltaX = nTouchEvent_touches_history[i].startX - nTouchEvent_touches_history[i].lastX;
-      nTouchEvent_touches_history[i].deltaY = nTouchEvent_touches_history[i].startY - nTouchEvent_touches_history[i].lastY;
-      clearTimeout(nTouchEvent_touches_history[i].tapHoldTimer);
+      aTouchEvent_touches_history[i].endTimestamp = nCurrentTimestamp;
+      aTouchEvent_touches_history[i].deltaX = aTouchEvent_touches_history[i].startX - aTouchEvent_touches_history[i].lastX;
+      aTouchEvent_touches_history[i].deltaY = aTouchEvent_touches_history[i].startY - aTouchEvent_touches_history[i].lastY;
+      clearTimeout(aTouchEvent_touches_history[i].tapHoldTimer);
       if (   oEvent.touches.length == 0
-          && nTouchEvent_touches_history[i].deltaX == 0 && nTouchEvent_touches_history[i].deltaY == 0
-          && nTouchEvent_touches_history[i].endTimestamp - nTouchEvent_touches_history[i].startTimestamp <= nTouchEvent_TAP_TIMER) {
+          && aTouchEvent_touches_history[i].deltaX == 0 && aTouchEvent_touches_history[i].deltaY == 0
+          && aTouchEvent_touches_history[i].endTimestamp - aTouchEvent_touches_history[i].startTimestamp <= nTouchEvent_TAP_TIMER) {
         // Counting taps
         nTapsCount++;
-      } else if (Math.abs(nTouchEvent_touches_history[i].deltaX) >= nTouchEvent_SWIPE_MIN_DISTANCE || Math.abs(nTouchEvent_touches_history[i].deltaY) >= nTouchEvent_SWIPE_MIN_DISTANCE) {
+      } else if (Math.abs(aTouchEvent_touches_history[i].deltaX) >= nTouchEvent_SWIPE_MIN_DISTANCE || Math.abs(aTouchEvent_touches_history[i].deltaY) >= nTouchEvent_SWIPE_MIN_DISTANCE) {
         // This is swipe
         var sSwipeDirection = '';
-        sSwipeDirection = nTouchEvent_touches_history[i].deltaX > 0 ? 'left' : 'right';
-        if (Math.abs(nTouchEvent_touches_history[i].deltaY/nTouchEvent_touches_history[i].deltaX) >= 2) {
-          sSwipeDirection = nTouchEvent_touches_history[i].deltaY > 0 ? 'up' : 'down';
+        sSwipeDirection = aTouchEvent_touches_history[i].deltaX > 0 ? 'left' : 'right';
+        if (Math.abs(aTouchEvent_touches_history[i].deltaY/aTouchEvent_touches_history[i].deltaX) >= 2) {
+          sSwipeDirection = aTouchEvent_touches_history[i].deltaY > 0 ? 'up' : 'down';
         }
         var oSwipeEvent = ample.createEvent("UIEvents");
         oSwipeEvent.initUIEvent("swipe", false, false, window, sSwipeDirection);
@@ -140,7 +140,7 @@ function fTouch_onTouchEnd(oEvent) {
         oSwipeDirectionEvent.initUIEvent("swipe" + sSwipeDirection, false, false, window, null);
         oEvent.target.dispatchEvent(oSwipeDirectionEvent);
 
-        nTouchEvent_touches_history[i].swipe = sSwipeDirection;
+        aTouchEvent_touches_history[i].swipe = sSwipeDirection;
         // Doubleswipe
         if (nSwipeCount[sSwipeDirection] == 1) {
           var oDoubleSwipeEvent = ample.createEvent("UIEvents");
@@ -178,8 +178,8 @@ function fTouch_onTouchEnd(oEvent) {
 };
 
 function fTouch_onTouchCancel(oEvent) {
-  nTouchEvent_touches = {};
-  nTouchEvent_touches_history = [];
+  oTouchEvent_touches = {};
+  aTouchEvent_touches_history = [];
 };
 
 ample.addEventListener("touchstart",	fTouch_onTouchStart,	false);
