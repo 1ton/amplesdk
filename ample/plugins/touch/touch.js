@@ -57,8 +57,7 @@ function fTouch_onTouchStart(oEvent) {
 	if (oEvent.touches.length == 2) {
 		nTouchEvent_pinch_last_distance	= Math.sqrt(Math.pow(oEvent.touches[0].pageX - oEvent.touches[1].pageX, 2) + Math.pow(oEvent.touches[0].pageY - oEvent.touches[1].pageY, 2));
 	}
-}
-;
+};
 
 function fTouch_onTouchMove(oEvent) {
 	for (var i = 0; i < oEvent.touches.length; i++) {
@@ -80,8 +79,7 @@ function fTouch_onTouchMove(oEvent) {
 			nTouchEvent_pinch_last_distance	= nDistance;
 		}
 	}
-}
-;
+};
 
 function fTouch_onTouchEnd(oEvent) {
 	var oTouchesLeft	= {},
@@ -178,14 +176,12 @@ function fTouch_onTouchEnd(oEvent) {
 			oEvent.target.dispatchEvent(oDoubleTapEvent);
 		}
 	}
-}
-;
+};
 
 function fTouch_onTouchCancel(oEvent) {
 	oTouchEvent_touches			= {};
 	aTouchEvent_touches_history	= [];
-}
-;
+};
 
 ample.addEventListener("touchstart",	fTouch_onTouchStart,	false);
 ample.addEventListener("touchmove",		fTouch_onTouchMove,		false);
