@@ -19,14 +19,14 @@ var oTouchEvent_touches				= {},
 	nTouchEvent_DOUBLESWIPE_TIMER	= 500;	// Maximum number of milliseconds between two swipes to detect doubleswipe
 
 function fTouch_onTouchStart(oEvent) {
-	var bDoubleTapHold = false,
-		nCurrentTimestamp = Number(new Date);
+	var bDoubleTapHold	= false,
+		nCurrentTimestamp	= Number(new Date);
 	for (i in oTouchEvent_touches) {
 		if (oTouchEvent_touches[i].endTimestamp
 				&& new Date - oTouchEvent_touches[i].endTimestamp > nTouchEvent_TIME_TO_KEEP_TOUCH) {
 			delete oTouchEvent_touches[i];
 		} else if (nCurrentTimestamp - oTouchEvent_touches[i].endTimestamp <= nTouchEvent_DOUBLETAP_TIMER) {
-			bDoubleTapHold = true;
+			bDoubleTapHold	= true;
 		}
 	}
 
@@ -41,54 +41,54 @@ function fTouch_onTouchStart(oEvent) {
 				'startTimestamp'	: Number(new Date),
 				'swipe'				: false,
 				'tapHoldTimer'		: setTimeout(function () {
-					var oTapHoldEvent = ample.createEvent("UIEvents");
+					var oTapHoldEvent	= ample.createEvent("UIEvent");
 					oTapHoldEvent.initUIEvent("taphold", false, false, window, null);
 					oEvent.target.dispatchEvent(oTapHoldEvent);
 					if (bDoubleTapHold) {
-						var oDoubleTapHoldEvent = ample.createEvent("UIEvents");
+						var oDoubleTapHoldEvent	= ample.createEvent("UIEvent");
 						oDoubleTapHoldEvent.initUIEvent("doubletaphold", false, false, window, null);
 						oEvent.target.dispatchEvent(oDoubleTapHoldEvent);
 					}
 				}, nTouchEvent_TAPHOLD_TIMER)
 			};
-			aTouchEvent_touches_history[aTouchEvent_touches_history.length] = oTouchEvent_touches[oEvent.touches[i].identifier];
+			aTouchEvent_touches_history[aTouchEvent_touches_history.length]	= oTouchEvent_touches[oEvent.touches[i].identifier];
 		}
 	}
 	if (oEvent.touches.length == 2) {
-		nTouchEvent_pinch_last_distance = Math.sqrt(Math.pow(oEvent.touches[0].pageX - oEvent.touches[1].pageX, 2) + Math.pow(oEvent.touches[0].pageY - oEvent.touches[1].pageY, 2));
+		nTouchEvent_pinch_last_distance	= Math.sqrt(Math.pow(oEvent.touches[0].pageX - oEvent.touches[1].pageX, 2) + Math.pow(oEvent.touches[0].pageY - oEvent.touches[1].pageY, 2));
 	}
 }
 ;
 
 function fTouch_onTouchMove(oEvent) {
 	for (var i = 0; i < oEvent.touches.length; i++) {
-		var nTouchId = oEvent.touches[i].identifier;
+		var nTouchId	= oEvent.touches[i].identifier;
 		clearTimeout(oTouchEvent_touches[nTouchId].tapHoldTimer);
 
-		oTouchEvent_touches[nTouchId].lastX = oEvent.touches[i].pageX;
-		oTouchEvent_touches[nTouchId].lastY = oEvent.touches[i].pageY;
+		oTouchEvent_touches[nTouchId].lastX	= oEvent.touches[i].pageX;
+		oTouchEvent_touches[nTouchId].lastY	= oEvent.touches[i].pageY;
 
 	}
 	if (oEvent.touches.length == 2) {
-		var nDistance = Math.sqrt(Math.pow(oEvent.touches[0].pageX - oEvent.touches[1].pageX, 2) + Math.pow(oEvent.touches[0].pageY - oEvent.touches[1].pageY, 2)),
-			nDelta = nTouchEvent_pinch_last_distance - nDistance;
+		var nDistance	= Math.sqrt(Math.pow(oEvent.touches[0].pageX - oEvent.touches[1].pageX, 2) + Math.pow(oEvent.touches[0].pageY - oEvent.touches[1].pageY, 2)),
+			nDelta	= nTouchEvent_pinch_last_distance - nDistance;
 
 		if (Math.abs(nDelta) >= nTouchEvent_PINCH_THRESHOLD) {
-			var oPinchEvent = ample.createEvent("UIEvents");
+			var oPinchEvent	= ample.createEvent("UIEvent");
 			oPinchEvent.initUIEvent("pinch" + (nDelta < 0 ? 'in' : 'out'), false, false, window, nDistance);
 			oEvent.target.dispatchEvent(oPinchEvent);
-			nTouchEvent_pinch_last_distance = nDistance;
+			nTouchEvent_pinch_last_distance	= nDistance;
 		}
 	}
 }
 ;
 
 function fTouch_onTouchEnd(oEvent) {
-	var oTouchesLeft = {},
-		s = '',
-		nCurrentTimestamp = Number(new Date),
-		nTapsCount = 0,
-		nSwipeCount = {
+	var oTouchesLeft	= {},
+		s	= '',
+		nCurrentTimestamp	= Number(new Date),
+		nTapsCount	= 0,
+		nSwipeCount	= {
 			'up'	: 0,
 			'down'	: 0,
 			'left'	: 0,
@@ -119,9 +119,9 @@ function fTouch_onTouchEnd(oEvent) {
 			nSwipeCount[aTouchEvent_touches_history[i].swipe]++;
 		} else if (!aTouchEvent_touches_history[i].endTimestamp && !oTouchesLeft[aTouchEvent_touches_history[i].identifier]) {
 			// Touch is ended
-			aTouchEvent_touches_history[i].endTimestamp = nCurrentTimestamp;
-			aTouchEvent_touches_history[i].deltaX = aTouchEvent_touches_history[i].startX - aTouchEvent_touches_history[i].lastX;
-			aTouchEvent_touches_history[i].deltaY = aTouchEvent_touches_history[i].startY - aTouchEvent_touches_history[i].lastY;
+			aTouchEvent_touches_history[i].endTimestamp	= nCurrentTimestamp;
+			aTouchEvent_touches_history[i].deltaX	= aTouchEvent_touches_history[i].startX - aTouchEvent_touches_history[i].lastX;
+			aTouchEvent_touches_history[i].deltaY	= aTouchEvent_touches_history[i].startY - aTouchEvent_touches_history[i].lastY;
 			clearTimeout(aTouchEvent_touches_history[i].tapHoldTimer);
 			if (oEvent.touches.length == 0
 					&& aTouchEvent_touches_history[i].deltaX == 0 && aTouchEvent_touches_history[i].deltaY == 0
@@ -130,27 +130,27 @@ function fTouch_onTouchEnd(oEvent) {
 				nTapsCount++;
 			} else if (Math.abs(aTouchEvent_touches_history[i].deltaX) >= nTouchEvent_SWIPE_MIN_DISTANCE || Math.abs(aTouchEvent_touches_history[i].deltaY) >= nTouchEvent_SWIPE_MIN_DISTANCE) {
 				// This is swipe
-				var sSwipeDirection = '';
-				sSwipeDirection = aTouchEvent_touches_history[i].deltaX > 0 ? 'left' : 'right';
+				var sSwipeDirection	= '';
+				sSwipeDirection	= aTouchEvent_touches_history[i].deltaX > 0 ? 'left' : 'right';
 				if (Math.abs(aTouchEvent_touches_history[i].deltaY / aTouchEvent_touches_history[i].deltaX) >= 2) {
-					sSwipeDirection = aTouchEvent_touches_history[i].deltaY > 0 ? 'up' : 'down';
+					sSwipeDirection	= aTouchEvent_touches_history[i].deltaY > 0 ? 'up' : 'down';
 				}
-				var oSwipeEvent = ample.createEvent("UIEvents");
+				var oSwipeEvent	= ample.createEvent("UIEvent");
 				oSwipeEvent.initUIEvent("swipe", false, false, window, sSwipeDirection);
 				oEvent.target.dispatchEvent(oSwipeEvent);
 
-				var oSwipeDirectionEvent = ample.createEvent("UIEvents");
+				var oSwipeDirectionEvent	= ample.createEvent("UIEvent");
 				oSwipeDirectionEvent.initUIEvent("swipe" + sSwipeDirection, false, false, window, null);
 				oEvent.target.dispatchEvent(oSwipeDirectionEvent);
 
-				aTouchEvent_touches_history[i].swipe = sSwipeDirection;
+				aTouchEvent_touches_history[i].swipe	= sSwipeDirection;
 				// Doubleswipe
 				if (nSwipeCount[sSwipeDirection] == 1) {
-					var oDoubleSwipeEvent = ample.createEvent("UIEvents");
+					var oDoubleSwipeEvent	= ample.createEvent("UIEvent");
 					oDoubleSwipeEvent.initUIEvent("doubleswipe", false, false, window, sSwipeDirection);
 					oEvent.target.dispatchEvent(oDoubleSwipeEvent);
 
-					var oDoubleSwipeDirectionEvent = ample.createEvent("UIEvents");
+					var oDoubleSwipeDirectionEvent	= ample.createEvent("UIEvent");
 					oDoubleSwipeDirectionEvent.initUIEvent("doubleswipe" + sSwipeDirection, false, false, window, null);
 					oEvent.target.dispatchEvent(oDoubleSwipeDirectionEvent);
 				}
@@ -159,7 +159,7 @@ function fTouch_onTouchEnd(oEvent) {
 						|| nSwipeCount['right'] == 1 && sSwipeDirection == 'left'
 						|| nSwipeCount['up'] == 1 && sSwipeDirection == 'down'
 						|| nSwipeCount['down'] == 1 && sSwipeDirection == 'up') {
-					var oSwipeBackEvent = ample.createEvent("UIEvents");
+					var oSwipeBackEvent	= ample.createEvent("UIEvent");
 					oSwipeBackEvent.initUIEvent("swipeback", false, false, window, null);
 					oEvent.target.dispatchEvent(oSwipeBackEvent);
 				}
@@ -168,12 +168,12 @@ function fTouch_onTouchEnd(oEvent) {
 	}
 
 	if (nTapsCount) {
-		var oTapEvent = ample.createEvent("UIEvents");
+		var oTapEvent	= ample.createEvent("UIEvent");
 		oTapEvent.initUIEvent("tap", false, false, window, nTapsCount);
 		oEvent.target.dispatchEvent(oTapEvent);
 
 		if (nDoubleTapsCount) {
-			var oDoubleTapEvent = ample.createEvent("UIEvents");
+			var oDoubleTapEvent	= ample.createEvent("UIEvent");
 			oDoubleTapEvent.initUIEvent("doubletap", false, false, window, Math.min(nTapsCount, nDoubleTapsCount));
 			oEvent.target.dispatchEvent(oDoubleTapEvent);
 		}
