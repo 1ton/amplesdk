@@ -55,8 +55,12 @@ function fQuery_ajax(oSettings) {
 				if (sExpectedDataType != "text") {
 					if (sExpectedDataType == "xml" || sResponseDataType == "xml") {
 						oResponse	= fBrowser_getResponseDocument(oRequest);
-						if (!oResponse)
+						if (!oResponse) {
 							sStatus	= "parsererror";
+//->Debug
+							fUtilities_warn(sGUARD_XML_SYNTAX_WRN);
+//<-Debug
+						}
 					}
 					else
 					if (sExpectedDataType == "json" || sResponseDataType == "json") {
@@ -65,6 +69,9 @@ function fQuery_ajax(oSettings) {
 						}
 						catch (oException) {
 							sStatus	= "parsererror";
+//->Debug
+							fUtilities_warn(sGUARD_JSON_SYNTAX_WRN, [oException.message]);
+//<-Debug
 						}
 					}
 					else
@@ -74,6 +81,9 @@ function fQuery_ajax(oSettings) {
 						}
 						catch (oException) {
 							sStatus	= "error";
+//->Debug
+							fUtilities_warn(sGUARD_JAVASCRIPT_SYNTAX_WRN, [oException.message]);
+//<-Debug
 						}
 					}
 				}
@@ -125,7 +135,7 @@ function fQuery_param(vValue) {
 		(function(sPrefix, vValue) {
 			if (vValue instanceof cArray)
 				for (var nIndex = 0, nLength = vValue.length, oValue; nIndex < nLength; nIndex++)
-					arguments.callee(sPrefix + '[' + ((oValue = vValue[nIndex]) instanceof cArray || typeof oValue == "object " ? nIndex : '') + ']', oValue);
+					arguments.callee(sPrefix + '[' + ((oValue = vValue[nIndex]) instanceof cArray || typeof oValue == "object" ? nIndex : '') + ']', oValue);
 			else
 			if (vValue instanceof cObject)
 				for (var sKey in vValue)

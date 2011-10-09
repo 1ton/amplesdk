@@ -633,18 +633,22 @@ cNode.prototype.removeEventListener	= function(sType, fHandler, bUseCapture)
 
 function fNode_executeHandler(oNode, fHandler, oEvent) {
 	try {
+		var bValue	= true;
 		if (typeof fHandler == "function")
-			fHandler.call(oNode, oEvent);
+			bValue	= fHandler.call(oNode, oEvent);
 		else
 		if (typeof fHandler.handleEvent == "function")
-			fHandler.handleEvent(oEvent);
+			bValue	= fHandler.handleEvent(oEvent);
 //->Guard
 		else
-			throw new cDOMException(cDOMException.GUARD_MEMBER_MISSING_ERR, null, ["handleEvent"]);
+			throw new cAmpleException(cAmpleException.MEMBER_MISSING_ERR, null, ["handleEvent"]);
 //<-Guard
+		// Emulate preventDefault call if handler returned false
+		if (bValue === false)
+			oEvent.preventDefault();
 	}
 	catch (oException) {
-		if (oException instanceof cDOMException) {
+		if ((oException instanceof cDOMException) || (oException instanceof cAmpleException)) {
 			var fErrorHandler	= oDOMConfiguration_values["error-handler"];
 			if (fErrorHandler) {
 				var oError	= new cDOMError(oException.message, cDOMError.SEVERITY_ERROR, oException);
@@ -653,6 +657,10 @@ function fNode_executeHandler(oNode, fHandler, oEvent) {
 				else
 				if (typeof fErrorHandler.handleError == "function")
 					fErrorHandler.handleError(oError);
+//->Guard
+				else
+					throw new cAmpleException(cAmpleException.MEMBER_MISSING_ERR, null, ["handleError"]);
+//<-Guard
 			}
 		}
 		throw oException;

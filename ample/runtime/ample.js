@@ -21,8 +21,7 @@ function fQuery(vArgument1, vArgument2, vArgument3) {
 		if (typeof vArgument1 == "string" || vArgument1 instanceof cString) {
 			if (vArgument1.substr(0,1) == '<') {
 				// XML string
-				var aNameSpaces	= [],
-					sText;
+				var aNameSpaces	= [];
 				for (var sKey in oAmple.prefixes)
 					if (oAmple.prefixes.hasOwnProperty(sKey) && sKey != "toString")
 						aNameSpaces.push("xmlns" + (sKey == '' ? '' : ':') + sKey + '="' + oAmple.prefixes[sKey] + '"');
@@ -41,7 +40,7 @@ function fQuery(vArgument1, vArgument2, vArgument3) {
 				if (arguments.length > 1) {
 //->Guard
 					if (!(vArgument2 instanceof cNode) &&!(vArgument2 instanceof cQuery))
-						throw new cDOMException(cDOMException.GUARD_ARGUMENT_WRONG_TYPE_ERR, fQuery.caller
+						throw new cAmpleException(cAmpleException.ARGUMENT_WRONG_TYPE_ERR, fQuery.caller
 	//->Debug
 							, ['2' + oGuard_endings[1], "context", "query", "Node" + '" ' + 'or' + ' "' + "Query"]
 	//<-Debug
@@ -54,7 +53,7 @@ function fQuery(vArgument1, vArgument2, vArgument3) {
 				if (arguments.length > 2 && vArgument3 !== null) {
 //->Guard
 					if (!(vArgument3 instanceof cFunction))
-						throw new cDOMException(cDOMException.GUARD_ARGUMENT_WRONG_TYPE_ERR, fQuery.caller
+						throw new cAmpleException(cAmpleException.ARGUMENT_WRONG_TYPE_ERR, fQuery.caller
 	//->Debug
 							, ['3' + oGuard_endings[2], "resolver", "query", "Function"]
 	//<-Debug
@@ -91,7 +90,7 @@ function fQuery(vArgument1, vArgument2, vArgument3) {
 			});
 //->Guard
 		else
-			throw new cDOMException(cDOMException.GUARD_ARGUMENT_WRONG_TYPE_ERR, fQuery.caller
+			throw new cAmpleException(cAmpleException.ARGUMENT_WRONG_TYPE_ERR, fQuery.caller
 	//->Debug
 				, ['1' + oGuard_endings[0], "query", "query", "String" + '", "' + "Query" + '" or "' + "Element"]
 	//<-Debug
@@ -137,7 +136,7 @@ function fAmple_extend(oTarget, oSource) {
 			hClasses[oPrototype.namespaceURI + '#' + '@' + oPrototype.localName]	= oTarget;
 //->Guard
 		else
-			throw new cDOMException(cDOMException.GUARD_ARGUMENT_WRONG_TYPE_ERR, null
+			throw new cAmpleException(cAmpleException.ARGUMENT_WRONG_TYPE_ERR, null
 	//->Debug
 				, ['1' + oGuard_endings[0], "source", "extend", "Attr" + '" or "' + "Element"]
 	//<-Debug

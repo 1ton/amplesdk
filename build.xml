@@ -113,6 +113,7 @@
 		<concat destfile="${temp.runtime.dir}/runtime-core.js" fixlastline="yes">
 			<!-- Helper Objects -->
 			<filelist dir="${source.runtime.dir}/classes/" files="
+				AmpleException,
 				Query.js"/>
 			<!-- DOM Core/Events/Selectors -->
 			<filelist dir="${source.runtime.dir}/classes/events/" files="
@@ -204,13 +205,16 @@
 	<target name="BUILD_AMPLE_RUNTIME_PREPARE_COMPAT" unless="skip.ample.runtime.compat">
 		<concat destfile="${temp.runtime.dir}/runtime-compat.js" fixlastline="yes">
 			<filelist dir="${source.runtime.dir}/compat/" files="
-				JSON.js,
+				Array.js,
+				base64.js,
+				Date.js,
 				DOMParser.js,
+				Function.js,
+				JSON.js,
+				String.js,
 				XMLHttpRequest.js,
 				XMLSerializer.js,
-				XSLTProcessor.js,
-				javascript.js,
-				base64.js"/>
+				XSLTProcessor.js"/>
 		</concat>
 	</target>
 

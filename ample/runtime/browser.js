@@ -515,7 +515,6 @@ function fBrowser_onMouseMove(oEvent) {
 function fBrowser_onContextMenu(oEvent) {
 	var oTarget		= fBrowser_getEventTarget(oEvent),
 		oPseudo		= fBrowser_getUIEventPseudo(oEvent),
-		nButton 	= fBrowser_getUIEventButton(oEvent),
 		bPrevent	= false,
 		oEventContextMenu	= new cMouseEvent;
 
@@ -964,15 +963,25 @@ function fBrowser_processScripts() {
 	};
 
 	// Process script tags
-    aElements = oBrowser_body.getElementsByTagName("script");
-    for (var nIndex = 0, nSkip = 0; aElements.length > nSkip; nIndex++) {
+    aElements = oUADocument.getElementsByTagName("script");
+    for (var nIndex = 0, nSkip = 0, sType, sSrc, sText; aElements.length > nSkip; nIndex++) {
     	// Current Script
-	    oElementDOM	= aElements[nSkip];
+		oElementDOM	= aElements[nSkip];
+		sType	= oElementDOM.type;
+		sText	= oElementDOM.text;
+		sSrc	= oElementDOM.src;
+		if (sText)
+			sText	= sText.replace(/^\s*(<!\[CDATA\[)?\s*/, '').replace(/\s*(\]\]>)\s*$/, '');
 
 		// Skip if differenet mime-type
-		if (oElementDOM.getAttribute("type") != "application/ample+xml")
-			nSkip++;
-		else {
+		if (sType == "application/ample+xml" || sType == "text/ample+xml") {
+			if (oElementDOM.parentNode == oBrowser_head) {
+//->Debug
+				fUtilities_warn(sQUARD_FRAGMENT_POSITION_WRN);
+//<-Debug
+				nSkip++;
+				continue;
+			}
 			hAttributes	= {};
 			bReferenced	= false;
 
@@ -990,15 +999,15 @@ function fBrowser_processScripts() {
                 		hAttributes[sAttribute]	= sAttribute == "style" ? oElementDOM[sAttribute].cssText : fUtilities_encodeEntities(oAttribute.nodeValue);
 			}
 
-			if (oElementDOM.getAttribute("src")) {
-				var oRequest	= fBrowser_load(oElementDOM.src, "text/xml");
+			if (sSrc) {
+				var oRequest	= fBrowser_load(sSrc, "text/xml");
 				// loaded fragment
 				oDocument	= fBrowser_getResponseDocument(oRequest);
 				bReferenced	= true;
 			}
 			else
 				oDocument	= fBrowser_createFragment(
-									oElementDOM.text.replace(/^\s*(<!\[CDATA\[)?\s*/, '').replace(/\s*(\]\]>)\s*$/, '').replace(/^\s*<\?xml.+\?>/, '').replace(/&/g, '&amp;').replace(/<script(.|\n|\r)+$/, ''),
+									sText.replace(/^\s*<\?xml.+\?>/, '').replace(/&/g, '&amp;').replace(/<script(.|\n|\r)+$/, ''),
 									fHashToString(hAttributes)
 								);
 
@@ -1007,7 +1016,7 @@ function fBrowser_processScripts() {
 		    	// Set xml:base for referenced documents
 		    	if (bReferenced)
 		    		if (!oDocument.documentElement.getAttribute("xml:base"))
-		    			oDocument.documentElement.setAttribute("xml:base", fUtilities_resolveUri(oElementDOM.src, fNode_getBaseURI(oAmple_root)));
+		    			oDocument.documentElement.setAttribute("xml:base", fUtilities_resolveUri(sSrc, fNode_getBaseURI(oAmple_root)));
 
 		    	// import XML DOM into Ample DOM
 		    	oElement	= fDocument_importNode(oAmple_document, oDocument.documentElement, true, null, true);
@@ -1062,11 +1071,6 @@ function fBrowser_processScripts() {
 
 				// Register tree
 				fDocument_register(oAmple_document, oElement);
-
-			    // Fire load Event
-		    	var oEventLoad = new cEvent;
-			    oEventLoad.initEvent("load", false, false);
-			    fNode_dispatchEvent(oElement, oEventLoad);
 		    }
 		    else {
 				oElementNew	= oUADocument.createElement("pre");
@@ -1098,10 +1102,28 @@ function fBrowser_processScripts() {
 //<-Debug
 
 //->Debug
-			    fUtilities_warn(sGUARD_NOT_WELLFORMED_WRN);
+			    fUtilities_warn(sGUARD_XML_SYNTAX_WRN);
 //<-Debug
 		    }
 		}
+		else
+		if (sType == "application/ample+javascript" || sType == "text/ample+javascript") {
+			if (sSrc)
+				sText	= fBrowser_load(sSrc, "text/javascript");
+
+			// Try executing
+			try {
+				fBrowser_eval(sText);
+			} catch (oException) {
+//->Debug
+				fUtilities_warn(sGUARD_JAVASCRIPT_SYNTAX_WRN, [oException.message]);
+//<-Debug
+			}
+			//
+			oElementDOM.parentNode.removeChild(oElementDOM);
+		}
+		else
+			nSkip++;
     }
 };
 
@@ -1114,7 +1136,7 @@ function fBrowser_processStyleSheets() {
     for (var nIndex = 0, nLength = aElements.length; nIndex < nLength; nIndex++) {
     	oElement	= aElements[nIndex];
 
-    	if (oElement.getAttribute("type") == "text/ample+css")
+    	if (oElement.type == "text/ample+css")
     		fBrowser_replaceNode(oElement, fBrowser_createStyleSheet(oElement.innerHTML, oUALocation.href, oElement.getAttribute("media")));
 	}
 
@@ -1124,7 +1146,7 @@ function fBrowser_processStyleSheets() {
     	oElement	= aElements[nSkip];
 
 		// Skip if different mime-type
-		if (oElement.getAttribute("type") != "text/ample+css")
+		if (oElement.type != "text/ample+css")
 			nSkip++;
 		else
 			fBrowser_replaceNode(oElement, fBrowser_createStyleSheet(fBrowser_load(oElement.href, "text/css").responseText, oElement.href, oElement.getAttribute("media")));
