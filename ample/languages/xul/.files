@@ -1,5 +1,6 @@
 # Classes
 classes/cXULElement.js
+classes/cXULDocument.js
 classes/cXULController.js
 classes/cXULInputElement.js
 classes/cXULSelectElement.js
@@ -11,6 +12,9 @@ managers/oXULCommandDispatcher.js
 managers/oXULPopupManager.js
 managers/oXULReflowManager.js
 managers/oXULWindowManager.js
+
+# Processing Instructions
+pis/xul-overlay.js
 
 # Locales
 locales/en.js
@@ -58,7 +62,7 @@ elements/button.js
 elements/panel.js
 elements/popupset.js
 elements/progressmeter.js
-#elements/scrollbox.js
+elements/scrollbox.js
 elements/splitter.js
 elements/statusbar.js
 elements/statusbarpanel.js
@@ -79,6 +83,8 @@ elements/tabpanels.js
 elements/toolbar.js
 elements/toolbarbutton.js
 elements/toolbarseparator.js
+elements/toolbarspacer.js
+elements/toolbarspring.js
 elements/toolbargrippy.js
 elements/toolbox.js
 # listbox

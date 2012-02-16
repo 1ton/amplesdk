@@ -113,7 +113,7 @@
 		<concat destfile="${temp.runtime.dir}/runtime-core.js" fixlastline="yes">
 			<!-- Helper Objects -->
 			<filelist dir="${source.runtime.dir}/classes/" files="
-				AmpleException,
+				AmpleException.js,
 				Query.js"/>
 			<!-- DOM Core/Events/Selectors -->
 			<filelist dir="${source.runtime.dir}/classes/events/" files="
@@ -472,6 +472,9 @@
 			<fileset dir="${source.xul.dir}/classes/">
 				<include name="*.js" />
 			</fileset>
+				<fileset dir="${source.xul.dir}/pis/">
+					<include name="*.js" />
+				</fileset>
 			<fileset dir="${source.xul.dir}/managers/">
 				<include name="*.js" />
 			</fileset>
