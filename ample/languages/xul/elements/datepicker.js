@@ -33,7 +33,7 @@ cXULElement_datepicker.prototype  = new cXULInputElement("datepicker");
 cXULElement_datepicker.prototype.$selectable	= true;
 
 //
-cXULElement_datepicker.prototype.popup	= true;
+cXULElement_datepicker.prototype.popup	= null;
 
 // Public Methods
 cXULElement_datepicker.prototype.toggle	= function(bState) {
@@ -79,7 +79,7 @@ cXULElement_datepicker.handlers	= {
 		if (!this.$isAccessible())
 			return;
 
-		if (oEvent.keyIdentifier == "Esc")
+		if (oEvent.keyIdentifier == "U+001B")	// Esc
 			this.toggle(false);
 	},
 	// focus
