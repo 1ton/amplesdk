@@ -1,7 +1,7 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2009 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
@@ -19,7 +19,7 @@ cXULElement_treecol.attributes	= {
 
 //Public Methods
 cXULElement_treecol.prototype.$isAccessible	= function() {
-	return this.parentNode.parentNode.$isAccessible();
+	return this.parentNode ? this.parentNode.$isAccessible() : true;
 };
 
 // Class Events Handlers
@@ -44,48 +44,49 @@ cXULElement_treecol.handlers	= {
 	},
 	"DOMAttrModified":	function(oEvent) {
 		if (oEvent.target == this) {
-			switch (oEvent.attrName) {
-				case "width":
-					this.$getContainer("stretch").style.width	= oEvent.newValue != null ? oEvent.newValue + "px" : '';
-					this.parentNode.parentNode.body.$getContainer("foot").rows[0].cells[this.parentNode.items.$indexOf(this) + (this.parentNode.parentNode.attributes["type"] ? 1 : 0)].getElementsByTagName("div")[0].style.width	= oEvent.newValue != null ? oEvent.newValue + "px" : '';
-					break;
-
-				case "label":
-					this.$getContainer("label").innerHTML	= oEvent.newValue || '';
-					break;
-
-				case "hidden":
-//				case "hideheader":
-					var nCell	= this.parentNode.items.$indexOf(this);
-					this.$getContainer().style.display	= oEvent.newValue == "true" ? "none" : "";
-					for (var nIndex = 0, aItems = this.parentNode.parentNode.items; nIndex < aItems.length; nIndex++)
-						if (aItems[nIndex].row)
-							aItems[nIndex].row.cells[nCell].setAttribute("hidden", oEvent.newValue);
-					this.parentNode.parentNode.body.$getContainer("foot").rows[0].cells[nCell + (this.parentNode.parentNode.attributes["type"] ? 1 : 0)].style.display	= oEvent.newValue == "true" ? "none" : "";
-					break;
-
-				default:
-					this.$mapAttribute(oEvent.attrName, oEvent.newValue);
+			if (oEvent.attrName ==  "hidden") {
+				var nCell	= this.parentNode.items.$indexOf(this);
+				for (var nIndex = 0, aItems = this.parentNode.parentNode.items; nIndex < aItems.length; nIndex++)
+					if (aItems[nIndex].row)
+						aItems[nIndex].row.cells[nCell].setAttribute("hidden", oEvent.newValue);
 			}
 		}
 	}
+};
+
+cXULElement_treecol.prototype.$mapAttribute	= function(sName, sValue) {
+	if (sName == "width") {
+		this.$getContainer("stretch").style.width	= sValue != null ? sValue + "px" : '';
+		this.parentNode.parentNode.body.$getContainer("foot").rows[0].cells[this.parentNode.items.$indexOf(this) + (this.parentNode.parentNode.attributes["type"] ? 1 : 0)].getElementsByTagName("div")[0].style.width	= sValue != null ? sValue + "px" : '';
+	}
+	else
+	if (sName == "label")
+		this.$getContainer("label").innerHTML	= sValue || '';
+	else
+	if (sName == "hidden") {
+		var nCell	= this.parentNode.items.$indexOf(this);
+		this.$getContainer().style.display	= sValue == "true" ? "none" : "";
+		this.parentNode.parentNode.body.$getContainer("foot").rows[0].cells[nCell + (this.parentNode.parentNode.attributes["type"] ? 1 : 0)].style.display	= sValue == "true" ? "none" : "";
+	}
+	else
+		cXULElement.prototype.$mapAttribute.call(this, sName, sValue);
 };
 
 // Element Render: open
 cXULElement_treecol.prototype.$getTagOpen	= function() {
 	return '<td class="xul-treecol' +(this.attributes["class"] ? " " + this.attributes["class"] : "")+ '"' + (this.attributes["hidden"] == "true" ? ' style="display:none"' : "")+ '>\
 				<div class="xul-treecol--box" style="position:relative;width:100%;">\
-					<div class="xul-treecol--label xul-treecol--gateway" style="position:absolute;width:100%;overflow:hidden;"> ' +(this.attributes["label"] || "");
+					<div class="xul-treecol--label xul-treecol--gateway" style="position:absolute;width:100%;overflow:hidden;"> ' +(this.attributes["label"] ? ample.$encodeXMLCharacters(this.attributes["label"]) : "");
 };
 
 // Element Render: close
 cXULElement_treecol.prototype.$getTagClose	= function() {
-    return			'</div>\
+	return			'</div>\
 					<div class="xul-treecol--resizer" style="position: absolute;right:0px;"><br /></div>\
 				</div>\
 				<div class="xul-treecol--stretch" style="height:1pt;font-size:1px;' + (this.attributes["width"] ? 'width:' + this.attributes["width"] + 'px' : '') + '"></div>\
 				<div style="height:1pt;font-size:1px;' + (this.attributes["minwidth"] ? 'width:' + this.attributes["minwidth"] + 'px' : '') + '"></div>\
-    		</td>';
+			</td>';
 };
 
 // Register Element

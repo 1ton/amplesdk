@@ -1,7 +1,7 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2009 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
@@ -13,8 +13,7 @@ cAUIElement_xhtml.prototype	= new cAUIElement("xhtml");
 // Public properties
 cAUIElement_xhtml.prototype.innerHTML	= null;
 
-cAUIElement_xhtml.prototype.$getTag	= function()
-{
+cAUIElement_xhtml.prototype.$getTag	= function() {
 	return this.innerHTML;
 };
 

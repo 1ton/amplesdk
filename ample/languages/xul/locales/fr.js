@@ -1,15 +1,14 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2010 Sergey Ilinsky, Greg
+ * Copyright (c) 2012 Sergey Ilinsky, Greg
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
  */
 
-(function($) {
-	var locales = $.locales,
-		locale	= locales["fr"]	= $.extend(true, {}, locales.en, {
+ample.locale.addCultureInfo("fr", {
+	messages: {
 			// window/dialog/wizard
 			"xul.dialog.button.accept":		"OK",
 			"xul.dialog.button.cancel":		"Annuler",
@@ -46,5 +45,5 @@
 
 			// Stupid text (please keep it for RCS and later editions)
 			"{":"}"
-		}, locales["fr"]);
-})(ample.locale);
+	}
+});

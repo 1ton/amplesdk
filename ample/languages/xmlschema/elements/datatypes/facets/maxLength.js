@@ -1,14 +1,14 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2011 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
  */
 
 var cXSElement_maxLength	= function(){};
-cXSElement_maxLength.prototype    = new cXSElement("maxLength");
+cXSElement_maxLength.prototype	= new cXSElement("maxLength");
 
 cXSElement_maxLength.handlers	= {};
 cXSElement_maxLength.handlers.DOMNodeInsertedIntoDocument	= function(oEvent) {

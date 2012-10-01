@@ -1,7 +1,7 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2009 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
@@ -18,39 +18,35 @@ cXULElement_script.attributes.hidden	= "true";
 
 // Element Handlers
 cXULElement_script.handlers	= {
-	"DOMAttrModified":	function(oEvent) {
-		if (oEvent.target == this) {
-			switch (oEvent.attrName) {
-				case "src":
-					if (oEvent.newValue)
-						this.$getContainer().src  = cXULElement.decodeXMLEntities(oEvent.newValue || '');
-					break;
-
-				default:
-					this.$mapAttribute(oEvent.attrName, oEvent.newValue);
-			}
-		}
-	},
 	"DOMNodeInsertedIntoDocument":	function(oEvent) {
 		if (this.attributes["src"])
-			this.$getContainer().src  = cXULElement.decodeXMLEntities(this.attributes["src"]);
+			this.$getContainer().src	= this.attributes["src"];
 		else
 		if (this.firstChild) {
 			var oElement	= document.body.appendChild(document.createElement("script"));
 			oElement.type	= "text/javascript";
-			oElement.text	= cXULElement.decodeXMLEntities(this.firstChild.nodeValue);
+			oElement.text	= this.firstChild.nodeValue;
 		}
 	}
 };
 
+cXULElement_script.prototype.$mapAttribute	= function(sName, sValue) {
+	if (sName == "src") {
+		if (sValue)
+			this.$getContainer().src	= sValue || '';
+	}
+	else
+		cXULElement.prototype.$mapAttribute.call(this, sName, sValue);
+};
+
 // Element Render: open
 cXULElement_script.prototype.$getTagOpen	= function() {
-    return '<script type="text/javascript">';
+	return '<script type="text/javascript">';
 };
 
 // Element Render: close
 cXULElement_script.prototype.$getTagClose	= function() {
-    return '</script>';
+	return '</script>';
 };
 
 // Register Element

@@ -1,7 +1,7 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2009 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
@@ -19,13 +19,13 @@ cXULElement_sidebar.attributes.height	= "100%";
 
 // Element Renders
 cXULElement_sidebar.prototype.$getTagOpen	= function() {
-    return '<div class="xul-sidebar' + (this.attributes["class"] ? " " + this.attributes["class"] : "") + '" style="' +
-    			(this.attributes["style"] ? this.attributes["style"] : '') + '">';
+	return '<div class="xul-sidebar' + (this.attributes["class"] ? " " + this.attributes["class"] : "") + '" style="' +
+				(this.attributes["style"] ? this.attributes["style"] : '') + '">';
 };
 
 // Element Render: close
 cXULElement_sidebar.prototype.$getTagClose	= function() {
-    return '</div>';
+	return '</div>';
 };
 
 // Register Element

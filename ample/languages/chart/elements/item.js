@@ -1,7 +1,7 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2009 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
@@ -9,7 +9,7 @@
 
 var cChartElement_item	= function(){};
 cChartElement_item.prototype	= new cChartElement("item");
-cChartElement_item.prototype.$hoverable	 = true;
+cChartElement_item.prototype.$hoverable	= true;
 
 cChartElement_item.handlers	= {
 
@@ -21,7 +21,7 @@ if (!cChartElement.useVML) {
 					<svg:path class="c-item--shadow" style="stroke-linejoin:round" transform="translate(2,2)"/>\
 					<svg:path class="c-item--path"/>\
 					<svg:path class="c-item--textPath" d="m0,0 h600" id="p' + this.uniqueID + '" style="fill:none;stroke:none"/>\
-					<svg:text class="c-item--label" style="stroke:none;"><svg:textPath xlink:href="#p' + this.uniqueID + '">' + this.getAttribute("value")+ '</svg:textPath></svg:text>\
+					<svg:text class="c-item--label" style="stroke:none;"><svg:textPath xlink:href="#p' + this.uniqueID + '">' + ample.$encodeXMLCharacters(this.getAttribute("value")) + '</svg:textPath></svg:text>\
 				</svg:g>';
 	};
 }
@@ -44,7 +44,7 @@ else {
 					<chart2vml:shape class="c-item--path" fillcolor="black" style="position:absolute;height:100%;width:100%"/>\
 					<chart2vml:shape class="c-item--textPath c-item--label" fillcolor="black" stroked="false" allowoverlap="true" style="position:absolute;width:100%;height:100%">\
 						<chart2vml:path textpathok="true" />\
-						<chart2vml:textpath on="true" string="' + this.getAttribute("value")+ '" style="v-text-align:left"/>\
+						<chart2vml:textpath on="true" string="' + ample.$encodeXMLCharacters(this.getAttribute("value")) + '" style="v-text-align:left"/>\
 					</chart2vml:shape>\
 				</chart2vml:group>';
 	};

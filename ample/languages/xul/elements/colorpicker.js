@@ -1,7 +1,7 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2009 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
@@ -57,10 +57,10 @@ cXULElement_colorpicker.prototype.toggle	= function(bState) {
 
 // Events handlers
 cXULElement_colorpicker.prototype._onChange	= function(oEvent) {
-    this.attributes["value"]    = this.$getContainer("input").value;
+	this.attributes["value"]	= this.$getContainer("input").value;
 
-    // Fire Event
-    cXULInputElement.dispatchChange(this);
+	// Fire Event
+	cXULInputElement.dispatchChange(this);
 };
 
 // Class Events handlers
@@ -100,24 +100,19 @@ cXULElement_colorpicker.handlers	= {
 		if (this.popup.getAttribute("hidden") != "true")
 			this.toggle(false);
 		this.$getContainer("input").blur();
-	},
-	"DOMAttrModified":	function(oEvent) {
-		if (oEvent.target == this) {
-			switch (oEvent.attrName) {
-				case "value":
-					this.$getContainer("input").value = oEvent.newValue || '';
-					break;
-
-				case "disabled":
-					this.$setPseudoClass("disabled", oEvent.newValue == "true");
-					this.$getContainer("input").disabled = oEvent.newValue == "true";
-					break;
-
-				default:
-					this.$mapAttribute(oEvent.attrName, oEvent.newValue);
-			}
-		}
 	}
+};
+
+cXULElement_colorpicker.prototype.$mapAttribute	= function(sName, sValue) {
+	if (sName == "value")
+		this.$getContainer("input").value = sValue || '';
+	else
+	if (sName == "disabled") {
+		this.$setPseudoClass("disabled", sValue == "true");
+		this.$getContainer("input").disabled	= sValue == "true";
+	}
+	else
+		cXULInputElement.prototype.$mapAttribute.call(this, sName, sValue);
 };
 
 // Element Render: open

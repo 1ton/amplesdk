@@ -1,7 +1,7 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2009 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
@@ -247,7 +247,7 @@ cXHTMLElement_input.handlers	= {
 					break;
 
 				case "checkbox":
-					if (sKey == "U+0020") 	// Space
+					if (sKey == "U+0020")	// Space
 						// TODO: Use keydown instead of click
 //						this.$activate();
 						break;
@@ -298,45 +298,41 @@ cXHTMLElement_input.handlers	= {
 	"DOMNodeRemovedFromDocument":	function(oEvent) {
 		//
 		cXHTMLInputElement.unregister(this);
-	},
-	"DOMAttrModified":	function(oEvent) {
-		if (oEvent.target == this) {
-			switch (oEvent.attrName) {
-				case "type":
-					// Re-render content
-					var oElementDOM	= this.$getContainer(),
-						oFactory	= document.createElement("div");
-					oFactory.innerHTML	= this.$getTag();
-					oElementDOM.parentNode.replaceChild(oFactory.firstChild, oElementDOM);
-					break;
+	}
+};
 
-				case "placeholder":
-					this.$getContainer("placeholder").innerHTML	= oEvent.newValue || '';
-					break;
-
-				case "checked":
-					this.$setPseudoClass("checked", oEvent.newValue != null && oEvent.newValue != "false");
-					break;
-
-				case "disabled":
-					this.$setPseudoClass("disabled", oEvent.newValue != null, "value");
-					this.$getContainer("value").disabled	= oEvent.newValue != null;
-					break;
-
-				case "value":
-					switch (this.attributes["type"]) {
-						case "range":
-							this.$getContainer("button").style.left	= cXHTMLElement_input.getRangeOffset(this, oEvent.newValue || '');
-							break;
-
-						default:
-							this.$getContainer("value").value	= oEvent.newValue || '';
-					}
-					break;
-			}
-			cXHTMLElement.mapAttribute(this, oEvent.attrName, oEvent.newValue);
+cXHTMLElement_input.prototype.$mapAttribute	= function(sName, sValue) {
+	if (sName == "type") {
+		// Re-render content
+		var oElementDOM	= this.$getContainer(),
+			oFactory	= document.createElement("div");
+		oFactory.innerHTML	= this.$getTag();
+		oElementDOM.parentNode.replaceChild(oFactory.firstChild, oElementDOM);
+	}
+	else
+	if (sName == "placeholder") {
+		this.$getContainer("placeholder").innerHTML	= sValue || '';
+	}
+	else
+	if (sName == "checked") {
+		this.$setPseudoClass("checked", sValue != null && sValue != "false");
+	}
+	else
+	if (sName == "disabled") {
+		this.$setPseudoClass("disabled", sValue != null, "value");	// Why on value pseudo-element?
+		this.$getContainer("value").disabled	= sValue != null;
+	}
+	else
+	if (sName == "value") {
+		if (this.attributes["type"] == "range") {
+			this.$getContainer("button").style.left	= cXHTMLElement_input.getRangeOffset(this, sValue || '');
+		}
+		else {
+			this.$getContainer("value").value	= sValue || '';
 		}
 	}
+	else
+		cXHTMLElement.prototype.$mapAttribute.call(this, sName, sValue);
 };
 
 // Static Members
@@ -451,8 +447,8 @@ cXHTMLElement_input.prototype.$getTagOpen		= function() {
 						(this.attributes["readonly"] ? ' readonly="true"' : '') +
 						(this.attributes["disabled"] ? ' disabled="true"' : '') +
 						(this.attributes["maxlength"] ? ' maxlength="' + this.attributes["maxlength"] + '"' : '') +
-						(sValue ? ' value="' + sValue + '"' : '') +
-						(this.attributes.name ? ' name="' + this.attributes.name + '"' : '')+
+						(sValue ? ' value="' + ample.$encodeXMLCharacters(sValue) + '"' : '') +
+						(this.attributes["name"] ? ' name="' + ample.$encodeXMLCharacters(this.attributes["name"]) + '"' : '')+
 					'/>');
 	aHtml.push(		'<div class="' + sClassName + '--label ' + sClassNameType + '--label">' +
 						(sType == "reset" || sType == "submit" || sType == "button"
@@ -464,7 +460,7 @@ cXHTMLElement_input.prototype.$getTagOpen		= function() {
 					'</div>');
 	aHtml.push(	'</div>');
 	aHtml.push(	'<div class="' + sClassName + '--popup" style="position:absolute;display:none">');
-    return aHtml.join('');
+	return aHtml.join('');
 };
 
 // Element Render: close (cancel double tag)

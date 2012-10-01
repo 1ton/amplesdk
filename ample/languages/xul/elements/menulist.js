@@ -1,7 +1,7 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2009 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
@@ -9,9 +9,9 @@
 
 var cXULElement_menulist	= function() {
 	// Collections
-	this.items	  	= new ample.classes.NodeList;
+	this.items			= new ample.classes.NodeList;
 };
-cXULElement_menulist.prototype   = new cXULInputElement("menulist");
+cXULElement_menulist.prototype	= new cXULInputElement("menulist");
 
 // Default Attributes
 cXULElement_menulist.attributes	= {
@@ -19,8 +19,7 @@ cXULElement_menulist.attributes	= {
 };
 
 // Public Properties
-//cXULElement_menulist.prototype.form	= null;
-
+cXULElement_menulist.prototype.items	= null;
 cXULElement_menulist.prototype.menupopup	= null;
 
 cXULElement_menulist.prototype.selectedIndex	=-1;
@@ -36,7 +35,7 @@ cXULElement_menulist.prototype.appendItem	= function(sLabel, sValue) {
 	return this.insertItemAt(this.items.length, sLabel, sValue);
 };
 
-cXULElement_menulist.prototype.insertItemAt  = function(nIndex, sLabel, sValue) {
+cXULElement_menulist.prototype.insertItemAt	= function(nIndex, sLabel, sValue) {
 	if (nIndex <= this.items.length) {
 		// create XUL element
 		var oElement	= this.ownerDocument.createElementNS(this.namespaceURI, "xul:menuitem");
@@ -54,7 +53,7 @@ cXULElement_menulist.prototype.insertItemAt  = function(nIndex, sLabel, sValue) 
 		throw new ample.classes.DOMException(DOMException.NOT_FOUND_ERR);
 };
 
-cXULElement_menulist.prototype.removeItemAt  = function(nIndex) {
+cXULElement_menulist.prototype.removeItemAt	= function(nIndex) {
 	if (this.items[nIndex])
 		return this.menupopup.removeChild(this.items[nIndex]);
 	else
@@ -81,10 +80,10 @@ cXULElement_menulist.prototype.toggle	= function(bState) {
 
 // Private Events Handlers
 cXULElement_menulist.prototype._onChange = function(oEvent) {
-	var oInput  = this.$getContainer("input");
+	var oInput	= this.$getContainer("input");
 
 //	if (this.items[this.selectedIndex] && this.items[this.selectedIndex].attributes["label"].substring(0, oInput.value.length) == oInput.value)
-//	   oInput.value	= this.items[this.selectedIndex].attributes["label"];
+//		oInput.value	= this.items[this.selectedIndex].attributes["label"];
 };
 
 // Class event handlers
@@ -112,14 +111,14 @@ cXULElement_menulist.handlers	= {
 				if (this.menupopup.getAttribute("hidden") == "true")
 					this.toggle(true);
 				else {
-					var nIndex  = this.selectedIndex;
+					var nIndex	= this.selectedIndex;
 					while (nIndex--> 0) {
 						if (this.items[nIndex].$getContainer().style.display != "none") {
 							if (this.items[this.selectedIndex])
 								this.items[this.selectedIndex].setAttribute("selected", "false");
 							this.items[nIndex].setAttribute("selected", "true");
 							this.items[nIndex].scrollIntoView();
-							this.selectedIndex = nIndex;
+							this.selectedIndex	= nIndex;
 							break;
 						}
 					}
@@ -130,16 +129,15 @@ cXULElement_menulist.handlers	= {
 			case "Down":
 				if (this.menupopup.getAttribute("hidden") == "true")
 					this.toggle(true);
-				else
-				{
-					var nIndex  = this.selectedIndex;
+				else {
+					var nIndex	= this.selectedIndex;
 					while (++nIndex < this.items.length) {
 						if (this.items[nIndex].$getContainer().style.display != "none") {
 							if (this.items[this.selectedIndex])
 								this.items[this.selectedIndex].setAttribute("selected", "false");
 							this.items[nIndex].setAttribute("selected", "true");
 							this.items[nIndex].scrollIntoView();
-							this.selectedIndex = nIndex;
+							this.selectedIndex	= nIndex;
 							break;
 						}
 					}
@@ -151,7 +149,7 @@ cXULElement_menulist.handlers	= {
 				this.toggle(false);
 				break;
 
-			case "Enter":   // enter
+			case "Enter":	// enter
 				if (this.menupopup.getAttribute("hidden") != "true") {
 					if (this.items[this.selectedIndex]) {
 						this.selectedText	= this.items[this.selectedIndex].getAttribute("label");
@@ -199,10 +197,10 @@ cXULElement_menulist.handlers	= {
 						this.items[this.selectedIndex].setAttribute("selected", "false");
 					this.items[nIndex].setAttribute("selected", "true");
 					this.items[nIndex].scrollIntoView();
-	//				this.attributes["value"]   = this.items[nIndex].attributes["value"];
-					this.selectedIndex = nIndex;
+	//				this.attributes["value"]	= this.items[nIndex].attributes["value"];
+					this.selectedIndex	= nIndex;
 				}
-		   		nOptions++;
+				nOptions++;
 			}
 		}
 
@@ -211,7 +209,7 @@ cXULElement_menulist.handlers	= {
 		else
 			this.toggle(false);
 
-		this.selectedText   = sSelectedText;
+		this.selectedText	= sSelectedText;
 	},
 	"focus":	function(oEvent) {
 		this.$getContainer("input").focus();
@@ -226,28 +224,11 @@ cXULElement_menulist.handlers	= {
 			var sValue	= this.$getContainer("input").value;
 			this.setAttribute("value", oEvent.target.getAttribute("label"));
 			this.selectedIndex	= this.items.$indexOf(oEvent.target);
-		    this.toggle(false);
+			this.toggle(false);
 
 			if (sValue != this.$getContainer("input").value) {
-			    // Fire Event
+				// Fire Event
 				cXULInputElement.dispatchChange(this);
-			}
-		}
-	},
-	"DOMAttrModified":	function(oEvent) {
-		if (oEvent.target == this) {
-			switch (oEvent.attrName) {
-				case "value":
-					this.$getContainer("input").value	= oEvent.newValue || '';
-					break;
-
-				case "disabled":
-					this.$setPseudoClass("disabled", oEvent.newValue == "true");
-					this.$getContainer("input").disabled = oEvent.newValue == "true";
-					break;
-
-				default:
-					this.$mapAttribute(oEvent.attrName, oEvent.newValue);
 			}
 		}
 	},
@@ -257,26 +238,37 @@ cXULElement_menulist.handlers	= {
 		});
 		if (oElement)
 			this.$getContainer("input").value	= oElement.getAttribute("label");
-	}/*,
-	"DOMNodeInsertedIntoDocument":	function(oEvent) {
-		for (var oElementTemp = this; oElementTemp; oElementTemp = oElementTemp.parentNode)
-			if (oElementTemp instanceof cXHTMLElement_form)
-				break;
-
-		if (oElementTemp)
-		{
-			// Set reference to the form element
-			this.form	= oElementTemp;
-
-			// Add to collection of elements
-			oElementTemp.elements.$add(this);
-	//		oElementTemp.elements[this.attributes["name"]]	= this;
+	},
+	"DOMNodeInserted":	function(oEvent) {
+		if (oEvent.target.parentNode == this) {
+			if (oEvent.target instanceof cXULElement_menupopup)
+				this.menupopup	= oEvent.target;
+			else
+			if (oEvent.target instanceof cXULElement_menuitem)
+				this.items.$add(oEvent.target);
 		}
 	},
-	"DOMNodeRemovedFromDocument":	function(oEvent) {
-		if (this.form)
-			this.form.elements.$remove(this);
-	}*/
+	"DOMNodeRemoved":	function(oEvent) {
+		if (oEvent.target.parentNode == this) {
+			if (oEvent.target instanceof cXULElement_menupopup)
+				this.menupopup	= null;
+			else
+			if (oEvent.target instanceof cXULElement_menuitem)
+				this.items.$remove(oEvent.target);
+		}
+	}
+};
+
+cXULElement_menulist.prototype.$mapAttribute	= function(sName, sValue) {
+	if (sName == "value")
+		this.$getContainer("input").value	= sValue || '';
+	else
+	if (sName == "disabled") {
+		this.$setPseudoClass("disabled", sValue == "true");
+		this.$getContainer("input").disabled	= sValue == "true";
+	}
+	else
+		cXULElement.prototype.$mapAttribute.call(this, sName, sValue);
 };
 
 // Element Render: open

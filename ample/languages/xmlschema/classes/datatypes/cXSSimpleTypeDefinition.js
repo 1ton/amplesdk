@@ -1,7 +1,7 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2009 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
@@ -121,7 +121,7 @@ oXSPrimitives[cXSConstants.DECIMAL_DT]		= /^[+\-]?((\d+(\.\d*)?)|(\.\d+))$/;
 oXSPrimitives[cXSConstants.DOUBLE_DT]		=
 oXSPrimitives[cXSConstants.FLOAT_DT]		= /^([+\-]?((\d+(\.\d*)?)|(\.\d+))([eE][+\-]?\d+)?|-?INF|NaN)$/;
 oXSPrimitives[cXSConstants.DURATION_DT]		= /^(-)?P(?:([0-9]+)Y)?(?:([0-9]+)M)?(?:([0-9]+)D)?(?:T(?:([0-9]+)H)?(?:([0-9]+)M)?(?:((?:(?:[0-9]+(?:.[0-9]*)?)|(?:.[0-9]+)))S)?)?$/;
-oXSPrimitives[cXSConstants.DATETIME_DT] 	= /^-?([1-9]\d\d\d+|0\d\d\d)-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])T(([01]\d|2[0-3]):[0-5]\d:[0-5]\d(\.\d+)?|24:00:00(\.0+)?)(Z|[+\-](0\d|1[0-4]):[0-5]\d)?$/;
+oXSPrimitives[cXSConstants.DATETIME_DT]		= /^-?([1-9]\d\d\d+|0\d\d\d)-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])T(([01]\d|2[0-3]):[0-5]\d:[0-5]\d(\.\d+)?|24:00:00(\.0+)?)(Z|[+\-](0\d|1[0-4]):[0-5]\d)?$/;
 oXSPrimitives[cXSConstants.DATE_DT]			= /^-?([1-9]\d\d\d+|0\d\d\d)-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])(Z|[+\-](0\d|1[0-4]):[0-5]\d)?$/;
 oXSPrimitives[cXSConstants.TIME_DT]			= /^(([01]\d|2[0-3]):[0-5]\d:[0-5]\d(\.\d+)?|24:00:00(\.0+)?)(Z|[+\-](0\d|1[0-4]):[0-5]\d)?$/;
 oXSPrimitives[cXSConstants.GYEARMONTH_DT]	= /^-?([1-9]\d\d\d+|0\d\d\d)-(0[1-9]|1[0-2])(Z|[+\-](0\d|1[0-4]):[0-5]\d)?$/;
@@ -134,11 +134,11 @@ oXSPrimitives[cXSConstants.BASE64BINARY_DT]	= /^((([A-Za-z0-9+\/]\s*){4})*(([A-Z
 
 // Converts XML Schema RegExp syntaxis to JavaScipt one
 function fXSSimpleTypeDefinition_schemaRegExpToJSRegExp(sValue) {
-	var d1= '\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF',
-		d2= '\u0370-\u037D\u037F-\u1FFF\u200C-\u200D',
-		d3= '\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD',
-		c = 'A-Z_a-z\\-.0-9\u00B7' + d1 + '\u0300-\u036F' + d2 + '\u203F-\u2040' + d3,
-		i = 'A-Z_a-z' + d1 + d2 + d3;
+	var d1	= '\u00C0-\u00D6\u00D8-\u00F6\u00F8-\u02FF',
+		d2	= '\u0370-\u037D\u037F-\u1FFF\u200C-\u200D',
+		d3	= '\u2070-\u218F\u2C00-\u2FEF\u3001-\uD7FF\uF900-\uFDCF\uFDF0-\uFFFD',
+		c	= 'A-Z_a-z\\-.0-9\u00B7' + d1 + '\u0300-\u036F' + d2 + '\u203F-\u2040' + d3,
+		i	= 'A-Z_a-z' + d1 + d2 + d3;
 	return sValue
 				.replace(/\[\\i-\[:\]\]/g, '[' + i + ']')
 				.replace(/\[\\c-\[:\]\]/g, '[' + c + ']')
@@ -312,8 +312,8 @@ function fXSSimpleTypeDefinition_getValue(oType, sValue) {
 
 			case cXSConstants.DURATION_DT:
 				var aDate	= oXSPrimitives[cXSConstants.DURATION_DT].exec(sValue),
-					nMonths = parseInt(aDate[2], 10) * 12 + parseInt(aDate[3], 10),
-					nSeconds = ((parseInt(aDate[4], 10) * 24 + parseInt(aDate[5], 10)) * 60 + parseInt(aDate[6], 10)) * 60 + parseFloat(aDate[7]);
+					nMonths		= parseInt(aDate[2], 10) * 12 + parseInt(aDate[3], 10),
+					nSeconds	= ((parseInt(aDate[4], 10) * 24 + parseInt(aDate[5], 10)) * 60 + parseInt(aDate[6], 10)) * 60 + parseFloat(aDate[7]);
 				return String(aDate[1] == '-' ? [-nMonths, -nSeconds] : [nMonths, nSeconds]);
 
 			// DATETIME/TIME/DATE
@@ -341,7 +341,7 @@ function fXSSimpleTypeDefinition_getWhiteSpace(oType, sValue) {
 				if (oFacet.facetKind == cXSSimpleTypeDefinition.FACET_WHITESPACE)
 					sWhiteSpace	= oFacet.lexicalFacetValue;
 	} else
-		sWhiteSpace = "collapse";
+		sWhiteSpace	= "collapse";
 
 	//
 	switch (sWhiteSpace) {

@@ -1,7 +1,7 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2009 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
@@ -199,12 +199,12 @@ if (cChartElement.useVML) {
 						iToX		= aParameters[5] + (sCommand == "A" ? 0 : iCurrentX),
 						iToY		= aParameters[6] + (sCommand == "A" ? 0 : iCurrentY);
 
-	                var a = (iToX - iCurrentX) / (2 * iRadiusX),
-	                    b = (iToY - iCurrentY) / (2 * iRadiusY),
-	                    c = Math.sqrt(Math.abs(1 - 1 / (a * a + b * b))) * (bLargeArc == bSweep ? -1 : 1),
-	                    iCenterX = iCurrentX + iRadiusX * (a - c * b),
-	                    iCenterY = iCurrentY + iRadiusY * (b + c * a);
-	                aPath.push((bSweep ? "wa" : "at") + [iCenterX - iRadiusX, iCenterY - iRadiusY, iCenterX + iRadiusX, iCenterY + iRadiusY, iCurrentX, iCurrentY, iToX, iToY].map(Math.round) + " ");
+					var a	= (iToX - iCurrentX) / (2 * iRadiusX),
+						b	= (iToY - iCurrentY) / (2 * iRadiusY),
+						c	= Math.sqrt(Math.abs(1 - 1 / (a * a + b * b))) * (bLargeArc == bSweep ? -1 : 1),
+						iCenterX	= iCurrentX + iRadiusX * (a - c * b),
+						iCenterY	= iCurrentY + iRadiusY * (b + c * a);
+					aPath.push((bSweep ? "wa" : "at") + [iCenterX - iRadiusX, iCenterY - iRadiusY, iCenterX + iRadiusX, iCenterY + iRadiusY, iCurrentX, iCurrentY, iToX, iToY].map(Math.round) + " ");
 
 					if (sCommand == "A") {
 						iCurrentX	= aParameters[5];

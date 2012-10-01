@@ -1,7 +1,7 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2009 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
@@ -49,15 +49,13 @@ cAUIElement_map.handlers	= {
 };
 
 // Element Render: open
-cAUIElement_map.prototype.$getTagOpen	= function()
-{
+cAUIElement_map.prototype.$getTagOpen	= function() {
 	return '<div' + (this.attributes["style"] ? ' style="' + this.attributes["style"] + '"' : '') + '>';
 };
 
 // Element Render: close
-cAUIElement_map.prototype.$getTagClose	= function()
-{
-    return '</div>';
+cAUIElement_map.prototype.$getTagClose	= function() {
+	return '</div>';
 };
 
 // Register Element

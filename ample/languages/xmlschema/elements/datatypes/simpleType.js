@@ -1,14 +1,14 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2011 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
  */
 
 var cXSElement_simpleType	= function(){};
-cXSElement_simpleType.prototype    = new cXSElement("simpleType");
+cXSElement_simpleType.prototype	= new cXSElement("simpleType");
 
 cXSElement_simpleType.handlers	= {};
 cXSElement_simpleType.handlers.DOMNodeInsertedIntoDocument	= function(oEvent) {

@@ -1,32 +1,25 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2009 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
  */
 
 var cXULElement_treeitem	= function(){};
-cXULElement_treeitem.prototype   = new cXULElement("treeitem");
+cXULElement_treeitem.prototype	= new cXULElement("treeitem");
 
 // Public Properties
 cXULElement_treeitem.prototype.row		= null; // Reference to XULElement_treerow
 cXULElement_treeitem.prototype.children	= null; // Reference to XULElement_treechildren
 
+cXULElement_treeitem.attributes	= {};
+cXULElement_treeitem.attributes.open	= "false";
+
 // Public Methods
 
 // Private Methods
-cXULElement_treeitem.prototype._getNodeDepth = function() {
-	var oElement= this.parentNode;
-    var nDepth  = 0;
-    while (oElement = oElement.parentNode.parentNode)
-        if (oElement instanceof cXULElement_tree)
-            break;
-        else
-            nDepth++;
-    return nDepth;
-};
 
 // Class Events Handlers
 cXULElement_treeitem.handlers	= {
@@ -38,55 +31,32 @@ cXULElement_treeitem.handlers	= {
 		if (oEvent.target.parentNode != this && oEvent.target.parentNode.parentNode != this)
 			return;
 
-	    //
-	    if (oEvent.button == 2 && oView.selectedItems.$indexOf(this) !=-1)
-	        return;
+		//
+		if (oEvent.button == 2 && oView.selectedItems.$indexOf(this) !=-1)
+			return;
 
-	    if (oEvent.shiftKey) {
+		if (oEvent.shiftKey) {
 			if (oView.currentItem)
 				oView.selectItemRange(this, oView.currentItem);
-	    }
+		}
 		else {
-	        if (oEvent.ctrlKey)
-	        	oView.toggleItemSelection(this);
-	        else
-	        	oView.selectItem(this);
-	    }
+			if (oEvent.ctrlKey)
+				oView.toggleItemSelection(this);
+			else
+				oView.selectItem(this);
+		}
 	},
 	"DOMAttrModified":	function(oEvent) {
 		if (oEvent.target == this) {
-			switch (oEvent.attrName) {
-				case "selected":
-					this.$setPseudoClass("selected", oEvent.newValue == "true");
-					if (this.parentNode.tree.attributes["type"] == "checkbox" || this.parentNode.tree.attributes["type"] == "radio")
-						this.$getContainer("command").checked = oEvent.newValue == "true";
-			        break;
-
-				case "open":
-					if (this.children) {
-						// Show/hide child items
-						this.children.setAttribute("hidden", oEvent.newValue == "true" ? "false" : "true");
-
-						// Change toc image at primary cell
-						if (this.parentNode.tree.head) {
-							var nDepth  = this._getNodeDepth(),
-								nIndex  = this.parentNode.tree.head._getPrimaryColIndex();
-							if (nIndex !=-1 && this.row.cells[nIndex]) {
-								// Apply pseudo-class
-								this.row.cells[nIndex].$setPseudoClass("open", oEvent.newValue == "true", "toc");
-
-								var oEvent = this.ownerDocument.createEvent("Event");
-								oEvent.initEvent("OpenStateChange", true, false);
-								this.dispatchEvent(oEvent);
-
-								return;
-							}
-						}
-					};
-					break;
-
-				default:
-					this.$mapAttribute(oEvent.attrName, oEvent.newValue);
+			if (oEvent.attrName == "open") {
+				if (this.children) {
+					// Show/hide child items
+					this.children.setAttribute("hidden", oEvent.newValue == "true" ? "false" : "true");
+					//
+					var oEvent	= this.ownerDocument.createEvent("Event");
+					oEvent.initEvent("OpenStateChange", true, false);
+					this.dispatchEvent(oEvent);
+				}
 			}
 		}
 	},
@@ -110,6 +80,29 @@ cXULElement_treeitem.handlers	= {
 				oEvent.target.tree	= null;
 			}
 	}
+};
+
+cXULElement_treeitem.prototype.$mapAttribute	= function(sName, sValue) {
+	var oParent	= this.parentNode;
+	if (sName == "selected") {
+		this.$setPseudoClass("selected", sValue == "true");
+		if (oParent && oParent.tree)
+			if (oParent.tree.attributes["type"] == "checkbox" || oParent.tree.attributes["type"] == "radio")
+				this.$getContainer("command").checked	= sValue == "true";
+	}
+	else
+	if (sName == "open") {
+		// Change toc image at primary cell
+		if (oParent && oParent.tree && this.row && oParent.tree.head) {
+			var nIndex	= oParent.tree.head._getPrimaryColIndex();
+			if (nIndex !=-1 && this.row.cells[nIndex]) {
+				// Apply pseudo-class
+				this.row.cells[nIndex].$setPseudoClass("open", sValue == "true", "toc");
+			}
+		}
+	}
+	else
+		cXULElement.prototype.$mapAttribute.call(this, sName, sValue);
 };
 
 cXULElement_treeitem.prototype.$getContainer	= function(sName) {

@@ -1,15 +1,15 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2009 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
  */
 
 var cXULElement_command	= function(){};
-cXULElement_command.prototype    = new cXULElement("command");
-cXULElement_command.prototype.viewType   = cXULElement.VIEW_TYPE_VIRTUAL;
+cXULElement_command.prototype	= new cXULElement("command");
+cXULElement_command.prototype.viewType	= cXULElement.VIEW_TYPE_VIRTUAL;
 
 // Class Event Handlers
 cXULElement_command.handlers	= {
@@ -21,10 +21,10 @@ cXULElement_command.handlers	= {
 					var aElements	= this.ownerDocument.getElementsByTagNameNS(this.namespaceURI, "*");
 					for (var nIndex = 0, oElement; oElement = aElements[nIndex]; nIndex++)
 						if (oElement.attributes["command"] == this.attributes["id"]) {
-				        	if (oEvent.newValue == null)
-				        		oElement.removeAttribute(oEvent.attrName);
-				        	else
-				        		oElement.setAttribute(oEvent.attrName, oEvent.newValue);
+							if (oEvent.newValue == null)
+								oElement.removeAttribute(oEvent.attrName);
+							else
+								oElement.setAttribute(oEvent.attrName, oEvent.newValue);
 						}
 				}
 			}

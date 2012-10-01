@@ -1,7 +1,7 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2009 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
@@ -52,26 +52,21 @@ cXHTMLElement_option.handlers	= {
 				break;
 		if (oNode)
 			oNode.options.$remove(this);
-	},
-	"DOMAttrModified":	function(oEvent) {
-		if (oEvent.target == this)
-			switch (oEvent.attrName) {
-				case "selected":
-					this.$setPseudoClass("selected", oEvent.newValue != null && oEvent.newValue != "false");
-					break;
-
-				case "label":
-					this.$getContainer("gateway").innerHTML	= oEvent.newValue || '';
-					break;
-
-				default:
-					cXHTMLElement.mapAttribute(this, oEvent.attrName, oEvent.newValue);
-			}
 	}
 };
 
+cXHTMLElement_option.prototype.$mapAttribute	= function(sName, sValue) {
+	if (sName == "selected")
+		this.$setPseudoClass("selected", sValue != null && sValue != "false");
+	else
+	if (sName == "label")
+		this.$getContainer("gateway").innerHTML	= sValue || '';
+	else
+		cXHTMLElement.prototype.$mapAttribute.call(this, sName, sValue);
+};
+
 cXHTMLElement_option.prototype.$getTagOpen	= function() {
-    var sClassName	= (this.prefix ? this.prefix + '-' : '') + this.localName;
+	var sClassName	= (this.prefix ? this.prefix + '-' : '') + this.localName;
 	return '<div class="' +	sClassName +
 				("class" in this.attributes ? ' ' + this.attributes["class"] : '')+
 				(this.attributes["disabled"] ? ' ' + sClassName + '_disabled' : '')+

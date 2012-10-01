@@ -1,7 +1,7 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2009 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
@@ -60,11 +60,11 @@ cXULElement_timepicker.attributes	= {
 };
 
 
-cXULElement_timepicker.prototype._onInputTimeChange    = function(oEvent, sName, sValue) {
-    this._setValue(sName, sValue);
+cXULElement_timepicker.prototype._onInputTimeChange	= function(oEvent, sName, sValue) {
+	this._setValue(sName, sValue);
 
-    // Fire Event
-    cXULInputElement.dispatchChange(this);
+	// Fire Event
+	cXULInputElement.dispatchChange(this);
 };
 
 // Class handlers
@@ -118,26 +118,23 @@ cXULElement_timepicker.handlers	= {
 		if (oEvent.$pseudoTarget == this.$getContainer("input"))
 			cXULElement_timepicker.setEditComponent(this, cXULElement_timepicker.getEditComponent(this));
 	},
-	"DOMNodeInsertedIntoDocument":	function(oEvent) {
-		this.spinButtons.setAttribute("disabled", this.$isAccessible() ? "false" : "true");
-	},
 	"DOMAttrModified":	function(oEvent) {
 		if (oEvent.target == this) {
-			switch (oEvent.attrName) {
-				case "disabled":
-					this.$setPseudoClass("disabled", oEvent.newValue == "true");
-					this.spinButtons.setAttribute("disabled", oEvent.newValue);
-					break;
-
-				case "value":
-					this.$getContainer("input").value	= oEvent.newValue || '';
-					break;
-
-				default:
-					this.$mapAttribute(oEvent.attrName, oEvent.newValue);
+			if (oEvent.attrName == "disabled") {
+				this.spinButtons.setAttribute("disabled", oEvent.newValue == "true" ? "true" : "false");
 			}
 		}
 	}
+};
+
+cXULElement_timepicker.prototype.$mapAttribute	= function(sName, sValue) {
+	if (sName == "disabled")
+		this.$setPseudoClass("disabled", sValue == "true");
+	else
+	if (sName == "value")
+		this.$getContainer("input").value	= sValue || '';
+	else
+		cXULInputElement.prototype.$mapAttribute.call(this, sName, sValue);
 };
 
 cXULElement_timepicker.getEditComponent	= function(oInstance) {
@@ -174,10 +171,11 @@ cXULElement_timepicker.setEditComponent	= function(oInstance, sComponent) {
 
 // Element Render: open
 cXULElement_timepicker.prototype.$getTagOpen		= function() {
-    var aTime    = this.attributes["value"].split(":");
-    return '<div class="xul-timepicker' + (this.attributes["class"] ? " " + this.attributes["class"] : "") + (!this.$isAccessible() ? " xul-timepicker_disabled" : '') + '">\
+	var aTime	= this.attributes["value"].split(":");
+	this.spinButtons.attributes["disabled"]	= this.$isAccessible() ? "false" : "true";
+	return '<div class="xul-timepicker' + (this.attributes["class"] ? " " + this.attributes["class"] : "") + (!this.$isAccessible() ? " xul-timepicker_disabled" : '') + '">\
 				<div class="xul-timepicker--field">\
-   					' + this.spinButtons.$getTag() + '\
+						' + this.spinButtons.$getTag() + '\
 					<input type="text" class="xul-timepicker--input" maxlength="8"' +(!this.$isAccessible() ? ' disabled="true"' : '')+ ' style="border:0px solid white;width:100%;" value="' + (aTime ? aTime[0] : "00") + ':' + (aTime ? aTime[1] : "00") + ':' + (aTime ? aTime[2] : "00") + '" />\
 				</div>\
 			</div>';

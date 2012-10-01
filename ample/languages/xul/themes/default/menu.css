@@ -1,8 +1,8 @@
 xul|menupopup {
-    cursor:	default !important;
-    background-color: #F0F0F0;
+	cursor:	default !important;
+	background-color: #F0F0F0;
 	border:	solid 1px #A0A0A0;
-    padding:	2px;
+	padding:	2px;
 	z-index:	100;
 }
 
@@ -27,15 +27,15 @@ xul|menupopup::shadow-bottom {
 }
 
 xul|menuitem {
-    color: black;
+	color: black;
 }
 xul|menuitem:hover {
-    color: white;
-    background-color: #3399FF;
+	color: white;
+	background-color: #3399FF;
 }
 xul|menuitem:selected {
-    color: #ffffff;
-    background-color: #3399FF;
+	color: #ffffff;
+	background-color: #3399FF;
 }
 xul|menuitem:disabled {
 	color:	#808080;
@@ -54,19 +54,19 @@ xul|menuitem[type=radio]::image {
 	background-position: 0px 16px;	/* hidden */
 	background-image: url(media/menuitem_radio.gif);
 }
-xul|menuitem::image:checked {
+xul|menuitem:checked xul|menuitem::image {
 	background-position: 0px 0px;
 }
 xul|menu {
 	color: black;
 }
 xul|menu:hover {
-    color: white;
-    background-color: #3399FF;
+	color: white;
+	background-color: #3399FF;
 }
 xul|menu:selected {
-    color: #ffffff;
-    background-color: #3399FF;
+	color: #ffffff;
+	background-color: #3399FF;
 }
 xul|menu:disabled {
 	color: #808080;
@@ -89,18 +89,18 @@ xul|menu::label {
 	padding-left:	5px;
 	padding-right:	5px;
 }
-xul|menuitem:selected xul|menuitem::image:checked,
-xul|menuitem:selected xul|menuitem::image:checked,
+
+xul|menuitem:checked:selected xul|menuitem::image,
 xul|menu::arrow:selected {
 	background-position: 0px -16px;
 }
-xul|menuitem:disabled xul|menuitem::image:checked,
-xul|menuitem:disabled xul|menuitem::image:checked,
+xul|menuitem:checked:disabled xul|menuitem::image,
 xul|menu::arrow:disabled {
 	background-position: 0px -48px;
 }
+
 xul|menuseparator {
-    border-top:	solid 1px #A0A0A0;
+	border-top:	solid 1px #A0A0A0;
 	background-color:	#FFFFFF;
 	margin-top:		2px;
 	margin-bottom:	1px;

@@ -1,7 +1,7 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2009 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
@@ -32,47 +32,46 @@ cXULElement_button.handlers	= {
 	},
 	"DOMActivate":	function(oEvent) {
 		this.doCommand();
-	},
-	"DOMAttrModified":	function(oEvent) {
-		if (oEvent.target == this) {
-			switch (oEvent.attrName) {
-				case "disabled":
-					this.$getContainer().disabled = oEvent.newValue == "true";
-					break;
-
-				default:
-					this.$mapAttribute(oEvent.attrName, oEvent.newValue);
-			}
-		}
 	}
 };
 
-// Element Render: open
-cXULElement_button.prototype.$getTagOpen	= function()
-{
-    var sHtml   = '<button class="xul-button' + (this.attributes["class"] ? " " + this.attributes["class"] : "") + '"';
-    if (!this.$isAccessible())
-        sHtml  += ' disabled="true"';
-    sHtml  += ' style="';
-    if (this.attributes["width"])
-        sHtml  += 'width:'+this.attributes["width"]+';';
-    if (this.attributes["height"])
-        sHtml  += 'height:'+this.attributes["height"]+';';
-    if (this.attributes["hidden"] == "true")
-    	sHtml  += 'display:none';
-    sHtml  += '">';
-    if (this.attributes["image"])
-        sHtml  += '<img src="' + this.attributes["image"] + '" align="absmiddle"/> ';
-    if (this.attributes["label"])
-        sHtml  += this.attributes["label"];
+cXULElement_button.prototype.$mapAttribute	= function(sName, sValue) {
+	if (sName == "disabled")
+		this.$getContainer().disabled	= sValue == "true";
+	else
+	if (sName == "label")
+		this.$getContainer().innerHTML	=(this.attributes["image"] ? '<img src="' + this.attributes["image"] + '" align="absmiddle" /> ' :'') + (sValue || '');
+	else
+	if (sName == "image")
+		this.$getContainer().innerHTML	=(sValue ? '<img src="' + sValue + '" align="absmiddle" /> ' :'') + (this.attributes["label"] || '');
+	else
+		cXULElement.prototype.$mapAttribute.call(this, sName, sValue);
+};
 
-    return sHtml;
+// Element Render: open
+cXULElement_button.prototype.$getTagOpen	= function() {
+	var sHtml	= '<button class="xul-button' + (this.attributes["class"] ? " " + this.attributes["class"] : "") + '"';
+	if (!this.$isAccessible())
+		sHtml  += ' disabled="true"';
+	sHtml  += ' style="';
+	if (this.attributes["width"])
+		sHtml  += 'width:'+this.attributes["width"]+';';
+	if (this.attributes["height"])
+		sHtml  += 'height:'+this.attributes["height"]+';';
+	if (this.attributes["hidden"] == "true")
+		sHtml  += 'display:none';
+	sHtml  += '">';
+	if (this.attributes["image"])
+		sHtml  += '<img src="' + ample.$encodeXMLCharacters(this.attributes["image"]) + '" align="absmiddle"/> ';
+	if (this.attributes["label"])
+		sHtml  += ample.$encodeXMLCharacters(this.attributes["label"]);
+
+	return sHtml;
 };
 
 // Element Render: close
-cXULElement_button.prototype.$getTagClose	= function()
-{
-    return '</button>';
+cXULElement_button.prototype.$getTagClose	= function() {
+	return '</button>';
 };
 
 // Register Element

@@ -1,7 +1,7 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2009 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
@@ -33,15 +33,11 @@ cXHTMLElement_optgroup.handlers	= {
 			if (this.parentNode != oNode)
 				this.$getContainer("gap").style.width	= nDepth + "em";
 		}
-	},
-	"DOMAttrModified":	function(oEvent) {
-		if (oEvent.target == this)
-			cXHTMLElement.mapAttribute(this, oEvent.attrName, oEvent.newValue);
 	}
 };
 
 cXHTMLElement_optgroup.prototype.$getTagOpen	= function() {
-    var sClassName	= (this.prefix ? this.prefix + '-' : '') + this.localName;
+	var sClassName	= (this.prefix ? this.prefix + '-' : '') + this.localName;
 	return '<div class="' +	sClassName +
 				("class" in this.attributes ? ' ' + this.attributes["class"] : '')+
 				(this.attributes["disabled"] ? ' ' + sClassName + '_disabled' : '')+

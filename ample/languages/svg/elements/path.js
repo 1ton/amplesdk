@@ -1,7 +1,7 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2009 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
@@ -131,28 +131,12 @@ if (cSVGElement.useVML) {
 
 	// handlers
 	cSVGElement_path.handlers	= {
-		'DOMAttrModified':	function(oEvent) {
-			if (oEvent.target == this) {
-				switch (oEvent.attrName) {
-					case "d":
-						this.$getContainer().path	= cSVGElement_path.convert(oEvent.newValue);
-						break;
-					//
-					case "transform":
-						cSVGElement.applyTransform(this);
-						break;
-					//
-					default:
-						cSVGElement.setStyle(this, oEvent.attrName, oEvent.newValue);
-				}
-			}
-		},
 		'DOMNodeInsertedIntoDocument':	function(oEvent) {
 			var sValue;
 
 			// Apply gradients
-			if ((sValue = cSVGElement.getStyle(this, "fill")) && sValue.substr(0, 3) == "url")
-				cSVGElement.setStyle(this, "fill", sValue);
+			if ((sValue = this.$getStyleComputed("fill")) && sValue.substr(0, 3) == "url")
+				this.$setStyle("fill", sValue);
 
 			// Apply transformation
 			cSVGElement.applyTransform(this);
@@ -160,6 +144,13 @@ if (cSVGElement.useVML) {
 			// Apply CSS
 			cSVGElement.applyCSS(this);
 		}
+	};
+
+	cSVGElement_path.prototype.$mapAttribute	= function(sName, sValue) {
+		if (sName == "d")
+			this.$getContainer().path	= cSVGElement_path.convert(sValue);
+		else
+			cSVGElement.prototype.$mapAttribute.call(this, sName, sValue);
 	};
 
 	cSVGElement_path.pathSegList2Path	= function(oPathSegList) {
@@ -237,13 +228,12 @@ if (cSVGElement.useVML) {
 			iCurrentY	= 0,
 			aCubic		= null,
 			aQuadratic	= null,
-			iControlY	= 0,
 			aPath		= [];
 
 		if (!aCommands)
 			return '';
 
-		for (var i = 0, aCommand, sCommand, aParameters, nParameters, nCommands = aCommands.length; i < nCommands; i++) {
+		for (var i = 0, sCommand, aParameters, nParameters, nCommands = aCommands.length; i < nCommands; i++) {
 			sCommand	= aCommands[i].substr(0, 1);
 			aParameters	= aCommands[i].substr(1).
 								replace(/(\d)-/g, '$1,-').
@@ -411,12 +401,12 @@ if (cSVGElement.useVML) {
 						iToX		= aParameters[5] + (sCommand == "A" ? 0 : iCurrentX),
 						iToY		= aParameters[6] + (sCommand == "A" ? 0 : iCurrentY);
 
-	                var a = (iToX - iCurrentX) / (2 * iRadiusX),
-	                    b = (iToY - iCurrentY) / (2 * iRadiusY),
-	                    c = Math.sqrt(Math.abs(1 - 1 / (a * a + b * b))) * (bLargeArc == bSweep ? -1 : 1),
-	                    iCenterX = iCurrentX + iRadiusX * (a - c * b),
-	                    iCenterY = iCurrentY + iRadiusY * (b + c * a);
-	                aPath.push((bSweep ? "wa" : "at") + [iCenterX - iRadiusX, iCenterY - iRadiusY, iCenterX + iRadiusX, iCenterY + iRadiusY, iCurrentX, iCurrentY, iToX, iToY].map(Math.round) + " ");
+					var a	= (iToX - iCurrentX) / (2 * iRadiusX),
+						b	= (iToY - iCurrentY) / (2 * iRadiusY),
+						c	= Math.sqrt(Math.abs(1 - 1 / (a * a + b * b))) * (bLargeArc == bSweep ? -1 : 1),
+						iCenterX	= iCurrentX + iRadiusX * (a - c * b),
+						iCenterY	= iCurrentY + iRadiusY * (b + c * a);
+					aPath.push((bSweep ? "wa" : "at") + [iCenterX - iRadiusX, iCenterY - iRadiusY, iCenterX + iRadiusX, iCenterY + iRadiusY, iCurrentX, iCurrentY, iToX, iToY].map(Math.round) + " ");
 
 					if (sCommand == "A") {
 						iCurrentX	= aParameters[5];

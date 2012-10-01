@@ -1,7 +1,7 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2009 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
@@ -14,32 +14,15 @@ if (cSVGElement.useVML) {
 
 	// Implementation for IE
 	cSVGElement_tspan.handlers	= {
-		'DOMAttrModified':	function(oEvent) {
-			if (oEvent.target == this) {
-				switch (oEvent.attrName) {
-					case "x":
-					case "y":
-					case "dx":
-					case "dy":
-						var nLeft	=((this.getAttribute("x") || (this.parentNode ? this.parentNode.getAttribute("x") : "0")).match(/([0-9\.]+)?/)[1] * 1 || 0) + (this.getAttribute("dx") * 1 || 0),
-							nTop	=((this.getAttribute("y") || (this.parentNode ? this.parentNode.getAttribute("y") : "0")).match(/([0-9\.]+)?/)[1] * 1 || 0) + (this.getAttribute("dy") * 1 || 0);
-						this.$getContainer().path	= 'm ' + [nLeft, nTop].map(Math.round) + ' r 1000,0 x';
-						break;
-					//
-					default:
-						cSVGElement.setStyle(this, oEvent.attrName, oEvent.newValue);
-				}
-			}
-		},
 		'DOMNodeInsertedIntoDocument':	function(oEvent) {
 			if (this.firstChild instanceof ample.classes.CharacterData)
-				this.$getContainer().getElementsByTagName("textpath")[0].string	= this.firstChild.data.replace(/^\s+/, '').replace(/\s+$/, '').replace(/&gt;/g, '>').replace(/&lt;/g, '<').replace(/&amp;/g, '&').replace(/&quot;/g, '"');
+				this.$getContainer().getElementsByTagName("textpath")[0].string	= this.firstChild.data.replace(/^\s+/, '').replace(/\s+$/, '');
 
 			var sValue;
 
 			// Apply gradients
-			if ((sValue = cSVGElement.getStyle(this, "fill")) && sValue.substr(0, 3) == "url")
-				cSVGElement.setStyle(this, "fill", sValue);
+			if ((sValue = this.$getStyleComputed("fill")) && sValue.substr(0, 3) == "url")
+				this.$setStyle("fill", sValue);
 
 			// Apply transform
 			cSVGElement.applyTransform(this);
@@ -49,17 +32,31 @@ if (cSVGElement.useVML) {
 		},
 		'DOMCharacterDataModified':	function(oEvent) {
 			if (oEvent.target.parentNode == this)
-				this.$getContainer().getElementsByTagName("textpath")[0].string	= oEvent.target.data.replace(/^\s+/, '').replace(/\s+$/, '').replace(/&gt;/g, '>').replace(/&lt;/g, '<').replace(/&amp;/g, '&').replace(/&quot;/g, '"');
+				this.$getContainer().getElementsByTagName("textpath")[0].string	= oEvent.target.data.replace(/^\s+/, '').replace(/\s+$/, '');
 		}
+	};
+
+	cSVGElement_tspan.prototype.$mapAttribute	= function(sName, sValue) {
+		if (sName == "x" || sName == "y" || sName == "dx" || sName == "dy") {
+			var nLeft	=((this.getAttribute("x") || (this.parentNode ? this.parentNode.getAttribute("x") : "0")).match(/([0-9\.]+)?/)[1] * 1 || 0) + (this.getAttribute("dx") * 1 || 0),
+				nTop	=((this.getAttribute("y") || (this.parentNode ? this.parentNode.getAttribute("y") : "0")).match(/([0-9\.]+)?/)[1] * 1 || 0) + (this.getAttribute("dy") * 1 || 0);
+			this.$getContainer().path	= 'm ' + [nLeft, nTop].map(Math.round) + ' r 1000,0 x';
+		}
+		else
+		if (sName == "transform") {
+			// no implementation
+		}
+		else
+			cSVGElement.prototype.$mapAttribute.call(this, sName, sValue);
 	};
 
 	// presentation
 	cSVGElement_tspan.prototype.$getTagOpen	= function() {
-		var sFontFamily	= cSVGElement.getStyle(this, "font-family") || "Times New Roman",
-			sFontWeight	= cSVGElement.getStyle(this, "font-weight"),
-			sFontSize	= cSVGElement.getStyle(this, "font-size"),
-			sFontStyle	= cSVGElement.getStyle(this, "font-style"),
-			sTextAnchor	= cSVGElement.getStyle(this, "text-anchor"),
+		var sFontFamily	= this.$getStyleComputed("font-family") || "Times New Roman",
+			sFontWeight	= this.$getStyleComputed("font-weight"),
+			sFontSize	= this.$getStyleComputed("font-size"),
+			sFontStyle	= this.$getStyleComputed("font-style"),
+			sTextAnchor	= this.$getStyleComputed("text-anchor"),
 			nLeft	=((this.getAttribute("x") || (this.parentNode ? this.parentNode.getAttribute("x") : "0")).match(/([0-9\.]+)?/)[1] * 1 || 0) + (this.getAttribute("dx") * 1 || 0),
 			nTop	=((this.getAttribute("y") || (this.parentNode ? this.parentNode.getAttribute("y") : "0")).match(/([0-9\.]+)?/)[1] * 1 || 0) + (this.getAttribute("dy") * 1 || 0),
 			// Font size calculations

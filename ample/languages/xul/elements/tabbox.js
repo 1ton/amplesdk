@@ -1,7 +1,7 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2009 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
@@ -18,27 +18,40 @@ cXULElement_tabbox.prototype.selectedIndex	= -1;
 cXULElement_tabbox.prototype.selectedTab	= null; // not supported
 cXULElement_tabbox.prototype.selectedPanel	= null; // not supported
 
-// Attributes Defaults
-cXULElement_tabbox.attributes	= {};
-cXULElement_tabbox.attributes.orient	= "vertical";
-
-// Class Events Handlers
+//Class event handlers
 cXULElement_tabbox.handlers	= {
-	"DOMAttrModified":	function(oEvent) {
-		if (oEvent.target == this) {
-			this.$mapAttribute(oEvent.attrName, oEvent.newValue);
+	"DOMNodeInserted":	function(oEvent) {
+		if (oEvent.target.parentNode == this) {
+			if (oEvent.target instanceof cXULElement_tabs)
+				this.tabs	= oEvent.target;
+			else
+			if (oEvent.target instanceof cXULElement_tabpanels)
+				this.tabpanels	= oEvent.target;
+		}
+	},
+	"DOMNodeRemoved":	function(oEvent) {
+		if (oEvent.target.parentNode == this) {
+			if (oEvent.target instanceof cXULElement_tabs)
+				this.tabs	= oEvent.target;
+			else
+			if (oEvent.target instanceof cXULElement_tabpanels)
+				this.tabpanels	= oEvent.target;
 		}
 	}
 };
 
+// Attributes Defaults
+cXULElement_tabbox.attributes	= {};
+cXULElement_tabbox.attributes.orient	= "vertical";
+
 // Element Render: open
 cXULElement_tabbox.prototype.$getTagOpen	= function() {
-    return '<div class="xul-tabbox' + (this.attributes["class"] ? " " + this.attributes["class"] : "") + '">';
+	return '<div class="xul-tabbox' + (this.attributes["class"] ? " " + this.attributes["class"] : "") + '">';
 };
 
 // Element Render: close
 cXULElement_tabbox.prototype.$getTagClose	= function() {
-    return '</div>';
+	return '</div>';
 };
 
 // Register Element

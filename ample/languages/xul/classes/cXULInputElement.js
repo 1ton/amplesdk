@@ -1,7 +1,7 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2009 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
@@ -51,10 +51,10 @@ cXULInputElement.setSelectionRange	= function(oInstance, nStart, nEnd) {
 
 // Static Methods
 cXULInputElement.dispatchChange	= function(oInstance) {
-    // Fire Event
-    var oEvent  = oInstance.ownerDocument.createEvent("UIEvent");
-    oEvent.initEvent("change", true, false, window, null);
-    oInstance.dispatchEvent(oEvent);
+	// Fire Event
+	var oEvent	= oInstance.ownerDocument.createEvent("UIEvent");
+	oEvent.initEvent("change", true, false, window, null);
+	oInstance.dispatchEvent(oEvent);
 };
 
 // Register Element

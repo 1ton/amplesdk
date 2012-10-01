@@ -1,14 +1,14 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2011 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
  */
 
 var cXSElement_union	= function(){};
-cXSElement_union.prototype    = new cXSElement("union");
+cXSElement_union.prototype	= new cXSElement("union");
 
 cXSElement_union.handlers	= {};
 cXSElement_union.handlers.DOMNodeInsertedIntoDocument	= function(oEvent) {

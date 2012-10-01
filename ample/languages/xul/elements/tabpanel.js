@@ -1,7 +1,7 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2009 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
@@ -20,15 +20,8 @@ cXULElement_tabpanel.attributes.width	= "100%";
 
 // Class event handlers
 cXULElement_tabpanel.handlers	= {
-	"DOMAttrModified":	function(oEvent) {
-		if (oEvent.target == this) {
-			this.$mapAttribute(oEvent.attrName, oEvent.newValue);
-		}
-	},
 	"DOMNodeInsertedIntoDocument":	function(oEvent) {
 		if (this.parentNode instanceof cXULElement_tabpanels) {
-			this.parentNode.items.$add(this);
-
 			var oTabBox	= this.parentNode.parentNode;
 			if (oTabBox instanceof cXULElement_tabbox) {
 				if (!isNaN(oTabBox.attributes["selectedIndex"]) && oTabBox.tabs.items.length > oTabBox.attributes["selectedIndex"] && this.parentNode.items.$indexOf(this) == oTabBox.attributes["selectedIndex"] * 1)
@@ -38,21 +31,17 @@ cXULElement_tabpanel.handlers	= {
 					oTabBox.tabs.goTo(0);
 			}
 		}
-	},
-	"DOMNodeRemovedFromDocument":	function(oEvent) {
-		if (this.parentNode instanceof cXULElement_tabpanels)
-			this.parentNode.items.$remove(this);
 	}
 };
 
 // Element Render: open
 cXULElement_tabpanel.prototype.$getTagOpen	= function() {
-    return '<div class="xul-tabpanel' + (this.attributes["class"] ? " " + this.attributes["class"] : "") + '"' +(this.attributes["hidden"] != "false" ? ' style="display:none"' : '')+ '>';
+	return '<div class="xul-tabpanel' + (this.attributes["class"] ? " " + this.attributes["class"] : "") + '"' +(this.attributes["hidden"] != "false" ? ' style="display:none"' : '')+ '>';
 };
 
 // Element Render: close
 cXULElement_tabpanel.prototype.$getTagClose	= function() {
-    return '</div>';
+	return '</div>';
 };
 
 // Register Element

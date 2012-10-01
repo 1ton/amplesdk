@@ -1,7 +1,7 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2009 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
@@ -31,8 +31,8 @@ cXHTMLElement_a.handlers	= {
 	"DOMActivate":	function(oEvent) {
 		// Handle @href="#href"
 		if (document.namespaces) {
-			var sHref= this.$getContainer().href,
-				aUrl = sHref.match(/^([^#]*)#(.*)/);
+			var sHref	= this.$getContainer().href,
+				aUrl	= sHref.match(/^([^#]*)#(.*)/);
 			if (aUrl && window.location.href.match(/^([^#]*)#/) && aUrl[1] == window.RegExp.$1)
 				ample.bookmark(aUrl[2]);
 		}
@@ -41,15 +41,11 @@ cXHTMLElement_a.handlers	= {
 		var oTarget;
 		if (this.getAttribute("target").match(/#(.+)$/) && (oTarget = this.ownerDocument.getElementById(window.RegExp.$1)))	{
 			// Load content into target
-			ample.query(oTarget).load(this.getAttribute("href").replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&'));
+			ample.query(oTarget).load(this.getAttribute("href"));
 
 			// Prevent following link
 			oEvent.preventDefault();
 		}
-	},
-	"DOMAttrModified":	function(oEvent) {
-		if (oEvent.target == this)
-			cXHTMLElement.mapAttribute(this, oEvent.attrName, oEvent.newValue);
 	}
 }
 

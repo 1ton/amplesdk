@@ -1,7 +1,7 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2009 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
@@ -37,7 +37,7 @@ cChartElement_map.prototype.refresh	= function() {
 
 	for (var nGroup = 0, nGroups = aData.length, oGroup; nGroup < nGroups; nGroup++) {
 		// Get DOM element
-		oGroup = this.childNodes[nGroup];
+		oGroup	= this.childNodes[nGroup];
 
 		for (var nItem = 0, nItems = aData[nGroup].length, oItem, oPath; nItem < nItems; nItem++) {
 			// Get DOM element
@@ -273,7 +273,7 @@ if (!cChartElement.useVML) {
 	cChartElement_map.prototype.$getTagOpen	= function() {
 		return '<div class="c-map' +(this.hasAttribute("class") ? ' ' + this.getAttribute("class") : '')+ '" style="' + this.getAttribute("style") + '">\
 					<svg:svg class="c-map--canvas" viewBox="0 0 600 300" style="width:inherit;height:inherit" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" onmouseover="ample.$instance(this)._onMouseOver(evt.target)" onmouseout="ample.$instance(this)._onMouseOut(evt.target)">\
-						<svg:text class="c-map--title" y="30" x="300">' + this.getAttribute("title")+ '</svg:text>\
+						<svg:text class="c-map--title" y="30" x="300">' + ample.$encodeXMLCharacters(this.getAttribute("title")) + '</svg:text>\
 						<svg:rect x="20" y="180" width="120" height="100" rx="10" class="c-legend"/>\
 						<svg:g class="c-map--underlay">' +
 							(function() {
@@ -374,7 +374,7 @@ else {
 					<chart2vml:group class="c-map--canvas" style="position:absolute;display:none;" coordOrigin="0 0" coordSize="600 300">\
 						<chart2vml:shape class="c-map--title" path="m0,0 l600,0" fillcolor="black" stroked="false" allowoverlap="true" style="position:absolute;width:100%;height:100%;top:30px;xleft:150px">\
 							<chart2vml:path textpathok="true" />\
-							<chart2vml:textpath on="true" string="' + this.getAttribute("title")+ '" style="v-text-align:center"/>\
+							<chart2vml:textpath on="true" string="' + ample.$encodeXMLCharacters(this.getAttribute("title")) + '" style="v-text-align:center"/>\
 						</chart2vml:shape>\
 						<chart2vml:shape path="' + cChartElement.roundRectPath(20, 180, 120, 100, 10, 10) + '" class="c-legend c-map--legend" style="position:absolute;width:100%;height:100%"/>\
 						<chart2vml:group class="c-map--underlay" style="position:absolute;width:100%;height:100%;" onmouseover="ample.$instance(this)._onMouseOver(event.srcElement)" onmouseout="ample.$instance(this)._onMouseOut(event.srcElement)">' +

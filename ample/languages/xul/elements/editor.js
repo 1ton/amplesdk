@@ -1,7 +1,7 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2009 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
@@ -12,9 +12,9 @@
  */
 // component constructor
 var cXULElement_editor	= function() {
-    //
-    var that	= this;
-    this.contentFragment	= ample.createDocumentFragment();
+	//
+	var that	= this;
+	this.contentFragment	= ample.createDocumentFragment();
 	// Font names
 	this._elementFontName	= this.contentFragment.appendChild(ample.createElementNS(this.namespaceURI, "xul:menulist"));
 	this._elementFontName.tabIndex	=-1;
@@ -196,26 +196,6 @@ cXULElement_editor.handlers	= {
 		//
 		cXULElement_editor.resetButtons(this);
 	},
-	"DOMAttrModified" : function (oEvent) {
-		if (oEvent.target == this)
-			switch (oEvent.attrName) {
-				case "disabled":
-					this.$setPseudoClass("disabled", oEvent.newValue == "true");
-					this.$getContainer("frame").contentWindow.document.designMode	= oEvent.newValue == "true" ? "off" : "on";
-					//
-//					if (event.newValue == "true")
-						cXULElement_editor.resetButtons(this);
-					// IE needs re-initialization
-					if (navigator.userAgent.match(/MSIE ([\d\.]+)/)) {
-						var that	= this;
-						cXULElement_editor.finalizeDocument(that);
-						setTimeout(function() {
-							cXULElement_editor.initializeDocument(that);
-						}, 0);
-					}
-					break;
-			}
-	},
 	"DOMCharacterDataModified":	function() {
 		if (this.firstChild.data != this.contentDocument.body.innerHTML)
 			this.contentDocument.body.innerHTML	= this.firstChild.data;
@@ -242,30 +222,50 @@ cXULElement_editor.handlers	= {
 	}
 };
 
+cXULElement_editor.prototype.$mapAttribute	= function(sName, sValue) {
+	if (sName == "disabled") {
+		this.$setPseudoClass("disabled", sValue == "true");
+		this.$getContainer("frame").contentWindow.document.designMode	= sValue == "true" ? "off" : "on";
+		//
+//		if (event.newValue == "true")
+			cXULElement_editor.resetButtons(this);
+		// IE needs re-initialization
+		if (navigator.userAgent.match(/MSIE ([\d\.]+)/)) {
+			var that	= this;
+			cXULElement_editor.finalizeDocument(that);
+			setTimeout(function() {
+				cXULElement_editor.initializeDocument(that);
+			}, 0);
+		}
+	}
+	else
+		cXULElement.prototype.$mapAttribute.call(this, sName, sValue);
+};
+
 // Static members
 cXULElement_editor.commands	= [
 	// command, display name, title
 	[
-	 	["undo",	"Undo",		ample.locale.localize("xul.editor.button.undo")],
-	 	["redo",	"Redo",		ample.locale.localize("xul.editor.button.redo")]
+		["undo",	"Undo",		ample.locale.localize("xul.editor.button.undo")],
+		["redo",	"Redo",		ample.locale.localize("xul.editor.button.redo")]
 	],
 	[
-		["justifyleft", 	"Left",		ample.locale.localize("xul.editor.button.justifyleft")],
+		["justifyleft",	"Left",		ample.locale.localize("xul.editor.button.justifyleft")],
 		["justifycenter",	"Center",	ample.locale.localize("xul.editor.button.justifycenter")],
 		["justifyright",	"Right",	ample.locale.localize("xul.editor.button.justifyright")],
 		["justifyfull",		"None",		ample.locale.localize("xul.editor.button.justifyfull")]
 	],
 	[
-	 	["outdent",		"Outdent",	ample.locale.localize("xul.editor.button.outdent")],
-	 	["indent",		"Indent",	ample.locale.localize("xul.editor.button.indent")]
+		["outdent",		"Outdent",	ample.locale.localize("xul.editor.button.outdent")],
+		["indent",		"Indent",	ample.locale.localize("xul.editor.button.indent")]
 	],
 	[
 		["insertunorderedlist",		"Unordered",	ample.locale.localize("xul.editor.button.insertunorderedlist")],
 		["insertorderedlist",		"Ordered",		ample.locale.localize("xul.editor.button.insertorderedlist")]
 	],
 	[
-	 	["createlink",	"Link",		ample.locale.localize("xul.editor.button.createlink")],
-	 	["unlink",		"Unlink",	ample.locale.localize("xul.editor.button.unlink")]
+		["createlink",	"Link",		ample.locale.localize("xul.editor.button.createlink")],
+		["unlink",		"Unlink",	ample.locale.localize("xul.editor.button.unlink")]
 	],
 	[
 		["bold",			"Bold",				ample.locale.localize("xul.editor.button.bold")],
@@ -279,13 +279,13 @@ cXULElement_editor.commands	= [
 	]
 	/*	// TODO
 	[
-	 	["fontsize", "Font size", "Font size"],
-	 	["fontname", "Font name", "Font name"],
-	 	["formatblock", "Format block", "Format block"]
+		["fontsize", "Font size", "Font size"],
+		["fontname", "Font name", "Font name"],
+		["formatblock", "Format block", "Format block"]
 	],
 	[
-	 	["forecolor", "Fore color", "Fore color"],
-	 	["backcolor", "Back color", "Back color"]
+		["forecolor", "Fore color", "Fore color"],
+		["backcolor", "Back color", "Back color"]
 	]*/
 ];
 
@@ -311,7 +311,7 @@ cXULElement_editor.htmlmap	= [
 
 cXULElement_editor.sanityze	= function(sHtml) {
 	for (var nIndex = 0; nIndex < cXULElement_editor.htmlmap.length; nIndex++)
-		sHtml = sHtml.replace(cXULElement_editor.htmlmap[nIndex][0], cXULElement_editor.htmlmap[nIndex][1]);
+		sHtml	= sHtml.replace(cXULElement_editor.htmlmap[nIndex][0], cXULElement_editor.htmlmap[nIndex][1]);
 
 	return sHtml.replace(/<a( target="_blank")?/g, '<a target="_blank"')
 				.replace(/\r?\n/g, "")
@@ -340,7 +340,7 @@ cXULElement_editor.initializeDocument	= function(oInstance) {
 			try {
 				oDOMElement.contentWindow.document.designMode	= "on";
 			} catch (e) {
-				var f = arguments.callee
+				var f	= arguments.callee
 				setTimeout(function(){f(oEvent)}, 0);
 				return;
 			}
@@ -388,7 +388,7 @@ cXULElement_editor.initializeDocument	= function(oInstance) {
 				}
 			}
 	};
-	var fUpdateState = function(oEvent) {
+	var fUpdateState	= function(oEvent) {
 		if (oInstance.$isAccessible())
 			cXULElement_editor.updateButtons(oInstance);
 	};
@@ -567,7 +567,7 @@ cXULElement_editor.prototype.$getTagOpen	= function() {
 };
 
 cXULElement_editor.prototype.$getTagClose	= function() {
-	return 		'</div>\
+	return		'</div>\
 			</div>';
 };
 

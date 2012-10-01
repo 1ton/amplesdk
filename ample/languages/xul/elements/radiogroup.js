@@ -1,15 +1,15 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2009 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
  */
 
 var cXULElement_radiogroup	= function() {
-    // Collections
-    this.items      = new ample.classes.NodeList;
+	// Collections
+	this.items		= new ample.classes.NodeList;
 };
 cXULElement_radiogroup.prototype	= new cXULInputElement("radiogroup");
 cXULElement_radiogroup.prototype.viewType	= cXULElement.VIEW_TYPE_BOXED;
@@ -24,7 +24,7 @@ cXULElement_radiogroup.attributes.orient	= "vertical";
 cXULElement_radiogroup.attributes.value	= "";
 
 // Public Methods
-cXULElement_radiogroup.prototype.appendItem  = function(sName, sValue) {
+cXULElement_radiogroup.prototype.appendItem	= function(sName, sValue) {
 
 };
 
@@ -40,36 +40,57 @@ cXULElement_radiogroup.prototype.removeItemAt= function(nIndex) {
 cXULElement_radiogroup.handlers	= {
 	"DOMAttrModified":	function(oEvent) {
 		if (oEvent.target == this) {
-			switch (oEvent.attrName) {
-				case "value":
-					for (var nIndex = 0; nIndex < this.items.length; nIndex++) {
-						if (this.items[nIndex].attributes["value"] == oEvent.newValue) {
-							this.items[nIndex].setAttribute("selected", "true");
-							break;
-						}
+			if (oEvent.attrName == "value") {
+				for (var nIndex = 0; nIndex < this.items.length; nIndex++) {
+					if (this.items[nIndex].attributes["value"] == oEvent.newValue) {
+						this.items[nIndex].setAttribute("selected", "true");
+						break;
 					}
-					break;
-
-				case "disabled":
-					var oElementDOM	= this.$getContainer();
-					this.$setPseudoClass("disabled", oEvent.newValue == "true");
-					break;
-
-				default:
-					this.$mapAttribute(oEvent.attrName, oEvent.newValue);
+				}
 			}
+		}
+	},
+	"DOMNodeInserted":	function(oEvent) {
+		if (oEvent.target instanceof cXULElement_radio) {
+			this.items.$add(oEvent.target);
+			oEvent.target.group	= this;
+			//
+			if (oEvent.target.attributes["selected"] == "true") {
+				this.selectedIndex	= this.items.length - 1;
+				this.selectedItem	= oEvent.target;
+			}
+		}
+	},
+	"DOMNodeRemoved":	function(oEvent) {
+		if (oEvent.target instanceof cXULElement_radio) {
+			//
+			if (oEvent.target.attributes["selected"] == "true") {
+				if (this.selectedItem == oEvent.target) {
+					this.selectedIndex	=-1;
+					this.selectedItem	= null;
+				}
+			}//
+			oEvent.target.group	= null;
+			this.items.$remove(oEvent.target);
 		}
 	}
 };
 
+cXULElement_radiogroup.prototype.$mapAttribute	= function(sName, sValue) {
+	if (sName == "disabled")
+		this.$setPseudoClass("disabled", sValue == "true");
+	else
+		cXULInputElement.prototype.$mapAttribute.call(this, sName, sValue);
+};
+
 // Element Render: open
 cXULElement_radiogroup.prototype.$getTagOpen	= function() {
-    return '<div class="xul-radiogroup' + (this.attributes["class"] ? " " + this.attributes["class"] : "") + (!this.$isAccessible() ? " xul-radiogroup_disabled" : "") + '">';
+	return '<div class="xul-radiogroup' + (this.attributes["class"] ? " " + this.attributes["class"] : "") + (!this.$isAccessible() ? " xul-radiogroup_disabled" : "") + '">';
 };
 
 // Element Render: close
 cXULElement_radiogroup.prototype.$getTagClose	= function() {
-    return '</div>';
+	return '</div>';
 };
 
 // Register Element

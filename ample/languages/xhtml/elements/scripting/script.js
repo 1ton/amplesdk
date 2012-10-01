@@ -1,7 +1,7 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2009 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
@@ -12,14 +12,10 @@ cXHTMLElement_script.prototype	= new cXHTMLElement("script");
 
 // Class Events Handlers
 cXHTMLElement_script.handlers	= {
-	"DOMAttrModified":	function(oEvent) {
-		if (oEvent.target == this)
-			cXHTMLElement.mapAttribute(this, oEvent.attrName, oEvent.newValue);
-	},
 	"DOMNodeInsertedIntoDocument":	function(oEvent) {
 		var sType	=(this.attributes["type"] || '').match(/(\w+)\/([-\w]+\+)?(?:x\-)?([-\w]+)?;?(.+)?/) ? RegExp.$3 : '';
 		if (this.attributes["src"])
-			this.$getContainer().src  = this.attributes["src"];
+			this.$getContainer().src	= this.attributes["src"];
 		else
 		if (this.firstChild &&(sType == "" || sType == "javascript" || sType == "ecmascript")) {
 			var oElement	= document.body.appendChild(document.createElement("script"));

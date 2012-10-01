@@ -1,7 +1,7 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2009 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
@@ -15,31 +15,12 @@ if (cSVGElement.useVML) {
 
 	// handlers
 	cSVGElement_line.handlers	= {
-		'DOMAttrModified':	function(oEvent) {
-			if (oEvent.target == this) {
-				switch (oEvent.attrName) {
-					case "x1":
-					case "y1":
-					case "x2":
-					case "y2":
-						this.$getContainer().path	= cSVGElement_line.toPath(this);
-						break;
-					//
-					case "transform":
-						cSVGElement.applyTransform(this);
-						break;
-					//
-					default:
-						cSVGElement.setStyle(this, oEvent.attrName, oEvent.newValue);
-				}
-			}
-		},
 		'DOMNodeInsertedIntoDocument':	function(oEvent) {
 			var sValue;
 
 			// Apply gradients
-			if ((sValue = cSVGElement.getStyle(this, "fill")) && sValue.substr(0, 3) == "url")
-				cSVGElement.setStyle(this, "fill", sValue);
+			if ((sValue = this.$getStyleComputed("fill")) && sValue.substr(0, 3) == "url")
+				this.$setStyle("fill", sValue);
 
 			// Apply transform
 			cSVGElement.applyTransform(this);
@@ -47,6 +28,13 @@ if (cSVGElement.useVML) {
 			// Apply CSS
 			cSVGElement.applyCSS(this);
 		}
+	};
+
+	cSVGElement_line.prototype.$mapAttribute	= function(sName, sValue) {
+		if (sName == "x1" || sName == "y1" || sName == "x2" || sName == "y2")
+			this.$getContainer().path	= cSVGElement_line.toPath(this);
+		else
+			cSVGElement.prototype.$mapAttribute.call(this, sName, sValue);
 	};
 
 	cSVGElement_line.toPath	= function(oElement) {

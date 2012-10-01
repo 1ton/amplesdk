@@ -1,7 +1,7 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2009 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
@@ -20,14 +20,6 @@ cXULElement_window.attributes.height	= "300";
 
 // Class Events Handlers
 cXULElement_window.handlers	= {
-	"DOMAttrModified":	function(oEvent) {
-		if (oEvent.target == this) {
-			switch (oEvent.attrName) {
-				default:
-					this.$mapAttribute(oEvent.attrName, oEvent.newValue);
-			}
-		}
-	},
 	"dragstart":	function(oEvent) {
 		if (oEvent.target == this && oEvent.$pseudoTarget != this.$getContainer("title"))
 			oEvent.preventDefault();
@@ -45,7 +37,7 @@ cXULElement_window.prototype.$getTagOpen	= function() {
 					<table cellpadding="0" cellspacing="0" border="0" width="100%" height="20">\
 						<tbody>\
 							<tr>\
-								<td class="xul-window--title">' +(this.attributes["title"] || " ")+ '</td>\
+								<td class="xul-window--title">' +(this.attributes["title"] ? ample.$encodeXMLCharacters(this.attributes["title"]) : " ")+ '</td>\
 								<td width="1"><div class="xul-window--button-close xul-window--button-close_normal" onclick="ample.$instance(this).hide()" onmouseover="this.className=this.className.replace(\'normal\', \'hover\')" onmouseout="this.className=this.className.replace(/hover|active/, \'normal\')" onmousedown="this.className=this.className.replace(\'hover\', \'active\')" onmouseup="this.className=this.className.replace(\'active\', \'normal\')"><br /></div></td>\
 							</tr>\
 						</tbody>\

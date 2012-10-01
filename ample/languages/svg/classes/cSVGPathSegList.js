@@ -1,7 +1,7 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2009 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
@@ -50,7 +50,7 @@ cSVGPathSegList.prototype.insertItemBefore	= function(oItem, nIndex) {
 	return oItem;
 };
 
-cSVGPathSegList.prototype.replaceItem 	= function(oItem, nIndex) {
+cSVGPathSegList.prototype.replaceItem	= function(oItem, nIndex) {
 	if (nIndex > this.numberOfItems || nIndex < 0)
 		throw new ample.classes.DOMException(DOMException.INDEX_SIZE_ERR);
 

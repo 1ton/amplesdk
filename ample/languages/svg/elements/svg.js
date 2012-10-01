@@ -1,7 +1,7 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2009 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
@@ -15,17 +15,6 @@ if (cSVGElement.useVML) {
 
 	// handlers
 	cSVGElement_svg.handlers	= {
-		'DOMAttrModified':	function(oEvent) {
-			if (oEvent.target == this) {
-				switch (oEvent.attrName) {
-					case "viewBox":
-					case "width":
-					case "height":
-						cSVGElement_svg.resize(this);
-						break;
-				}
-			}
-		},
 		'DOMNodeInsertedIntoDocument':	function(oEvent) {
 			// Hiding SVG content initially and showing it after timeout improves performance!
 			var that	= this;
@@ -42,6 +31,11 @@ if (cSVGElement.useVML) {
 		'DOMNodeRemovedFromDocument':	function() {
 			this.$getContainer().onresize	= null;
 		}
+	};
+
+	cSVGElement_svg.prototype.$mapAttribute	= function(sName, sValue) {
+		if (sName == "width" || sName == "height" || sName == "viewBox")
+			cSVGElement_svg.resize(this);
 	};
 
 	cSVGElement_svg.resize	= function(oInstance) {
@@ -119,7 +113,7 @@ if (cSVGElement.useVML) {
 		}
 		else {
 			nLeft	= (nWidthInner - (nWidthInner * nRatio)) / 2;
-			nWidthInner 	*= nRatio;
+			nWidthInner	*= nRatio;
 		}
 
 		// account for min-x, min-y
@@ -134,10 +128,10 @@ if (cSVGElement.useVML) {
 			sHeightUnit	= aHeight[2] == "%" || !aHeight[2] ? "px" : aHeight[2];
 
 		return [
-		        [nLeft + sWidthUnit, nTop + sHeightUnit],
-		        [nWidthInner + sWidthUnit, nHeightInner + sHeightUnit],
-		        [sWidthOuter, sHeightOuter]/*,
-		        [aViewBox[2], aViewBox[3]]*/
+				[nLeft + sWidthUnit, nTop + sHeightUnit],
+				[nWidthInner + sWidthUnit, nHeightInner + sHeightUnit],
+				[sWidthOuter, sHeightOuter]/*,
+				[aViewBox[2], aViewBox[3]]*/
 		];
 	};
 

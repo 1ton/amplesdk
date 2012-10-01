@@ -1,7 +1,7 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2009 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
@@ -17,6 +17,13 @@ cXULWindowElement.prototype.$draggable	= true;
 cXULWindowElement.prototype.$resizable	= true;
 
 cXULWindowElement.modalWindow	= null;
+
+cXULWindowElement.prototype.$mapAttribute	= function(sName, sValue) {
+	if (sName == "title")
+		this.$getContainer("title").innerHTML	= sValue || '';
+	else
+		cXULElement.prototype.$mapAttribute.call(this, sName, sValue);
+};
 
 cXULWindowElement.prototype.show	= function (nLeft, nTop) {
 	var that	= this,
@@ -104,7 +111,7 @@ cXULWindowElement.prototype.show	= function (nLeft, nTop) {
 				if (that.getAttribute("buttons").split(/\s*,\s*/).indexOf(sButtonFocus) != -1)
 					that.buttons[sButtonFocus].focus();
 			//
-			var oEvent  = that.ownerDocument.createEvent("CustomEvent");
+			var oEvent	= that.ownerDocument.createEvent("CustomEvent");
 			oEvent.initCustomEvent("windowshown", true, false, null);
 			that.dispatchEvent(oEvent);
 		}
@@ -120,7 +127,7 @@ cXULWindowElement.prototype.showModal	= function (nTop, nLeft) {
 	this.show(nTop, nLeft);
 };
 
-cXULWindowElement.prototype.hide = function() {
+cXULWindowElement.prototype.hide	= function() {
 	var that	= this,
 		oContainer	= that.$getContainer(),
 		oHead	= that.$getContainer("head"),
@@ -180,7 +187,7 @@ cXULWindowElement.prototype.hide = function() {
 			oContainer.style.minWidth	= "";
 			oContainer.style.minHeight	= "";
 			//
-			var oEvent  = that.ownerDocument.createEvent("CustomEvent");
+			var oEvent	= that.ownerDocument.createEvent("CustomEvent");
 			oEvent.initCustomEvent("windowhidden", true, false, null);
 			that.dispatchEvent(oEvent);
 		}

@@ -1,7 +1,7 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2011 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
@@ -14,7 +14,7 @@ cXULOverlayPI.prototype	= new ample.classes.ProcessingInstruction;
 cXULOverlayPI.prototype.target	= "xul-overlay";
 
 cXULOverlayPI.handlers	= {
-	"DOMNodeInsertedIntoDocument":	function() {
+	"DOMNodeInserted":	function() {
 		var aHref	= this.data.match(/href=('([^']*)'|"([^"]*)")/);
 		if (aHref)
 			this.ownerDocument.loadOverlay(aHref[2] || aHref[3]);

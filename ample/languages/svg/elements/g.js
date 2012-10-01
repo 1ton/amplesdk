@@ -1,7 +1,7 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2009 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
@@ -12,21 +12,10 @@ cSVGElement_g.prototype	= new cSVGElement("g");
 
 if (cSVGElement.useVML) {
 	// Implementation for IE
-
-	// Class Event Handlers
-	cSVGElement_g.handlers	= {
-		'DOMAttrModified':	function(oEvent) {
-			if (oEvent.target == this) {
-				switch (oEvent.attrName) {
-					case "transform":
-						cSVGElement.applyTransform(this);
-						break;
-
-					default:
-						cSVGElement.setStyle(this, oEvent.attrName, oEvent.newValue);
-				}
-			}
-		}
+	cSVGElement_g.prototype.$setStyle	= function(sName, sValue) {
+		for (var nIndex = 0, oChild; oChild = this.childNodes[nIndex]; nIndex++)
+			if (oChild.nodeType == 1 && !oChild.$getStyle(sName))
+				oChild.$setStyle(sName, sValue);
 	};
 
 	// presentation

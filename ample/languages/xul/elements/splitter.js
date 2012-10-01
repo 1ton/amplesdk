@@ -1,14 +1,14 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2009 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
  */
 
 var cXULElement_splitter	= function(){};
-cXULElement_splitter.prototype   = new cXULElement("splitter");
+cXULElement_splitter.prototype	= new cXULElement("splitter");
 
 // Private properties
 cXULElement_splitter.prototype._clientX	= 0;
@@ -118,22 +118,17 @@ cXULElement_splitter.handlers	= {
 				if (!((nMin = this.nextSibling.attributes["min" + sMeasure]) && nMin > nValue - nOffset) && !((nMax = this.nextSibling.attributes["max" + sMeasure]) && nMax < nValue - nOffset))
 					oElementDOM.style[this.parentNode.getAttribute("orient") == "vertical" ? "top" : "left"]	=(cXULElement_splitter.offset + nOffset)+ "px";
 		}
-	},
-	"DOMAttrModified":	function(oEvent) {
-		if (oEvent.target == this) {
-			this.$mapAttribute(oEvent.attrName, oEvent.newValue);
-		}
 	}
 };
 
 // Element Render: open
 cXULElement_splitter.prototype.$getTagOpen	= function() {
-    return '<div class="xul-splitter' + (this.attributes["class"] ? " " + this.attributes["class"] : "") + ' xul-splitter-' +(this.parentNode.attributes["orient"] == "vertical" ? "vertical" : "horizontal")+ '" style="line-height:1px"><div class="xul-splitter--image"></div>';
+	return '<div class="xul-splitter' + (this.attributes["class"] ? " " + this.attributes["class"] : "") + ' xul-splitter-' +(this.parentNode.attributes["orient"] == "vertical" ? "vertical" : "horizontal")+ '" style="line-height:1px"><div class="xul-splitter--image"></div>';
 };
 
 // Element Render: close
 cXULElement_splitter.prototype.$getTagClose	= function() {
-    return '</div>';
+	return '</div>';
 };
 
 // Register Element

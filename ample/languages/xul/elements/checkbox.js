@@ -1,7 +1,7 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2009 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
@@ -30,32 +30,29 @@ cXULElement_checkbox.handlers	= {
 	},
 	"DOMAttrModified":	function(oEvent) {
 		if (oEvent.target == this) {
-			switch (oEvent.attrName) {
-				case "disabled":
-			    	this.$setPseudoClass("disabled", oEvent.newValue == "true");
-			        break;
-
-		    	case "value":
-		    		this.setAttribute("checked", oEvent.newValue == "on" ? "true" : "false");
-			        break;
-
-		    	case "checked":
-			        this.setAttribute("value", oEvent.newValue == "true" ? "on" : "off");
-			        this.$setPseudoClass("checked", oEvent.newValue == "true");
-			        break;
-
-		    	case "label":
-		    		this.$getContainer("label").innerHTML = oEvent.newValue || '';
-		    		break;
-
-		    	default:
-					this.$mapAttribute(oEvent.attrName, oEvent.newValue);
-			}
+			if (oEvent.attrName == "value")
+				this.setAttribute("checked", oEvent.newValue == "on" ? "true" : "false");
+			else
+			if (oEvent.attrName == "checked")
+				this.setAttribute("value", oEvent.newValue == "true" ? "on" : "off");
 		}
 	},
 	"DOMActivate":	function(oEvent) {
 		this.setAttribute("checked", this.getAttribute("checked") == "true" ? "false" : "true");
 	}
+};
+
+cXULElement_checkbox.prototype.$mapAttribute	= function(sName, sValue) {
+	if (sName == "disabled")
+		this.$setPseudoClass("disabled", sValue == "true");
+	else
+	if (sName == "checked")
+		this.$setPseudoClass("checked", sValue == "true");
+	else
+	if (sName == "label")
+		this.$getContainer("label").innerHTML	= sValue || '';
+	else
+		cXULInputElement.prototype.$mapAttribute.call(this, sName, sValue);
 };
 
 // Element Render: open
@@ -64,7 +61,7 @@ cXULElement_checkbox.prototype.$getTagOpen		= function() {
 		bDisabled	= !this.$isAccessible();
 	return '<div class="xul-checkbox' + (this.hasAttribute("class") ? ' ' + this.getAttribute("class") : '') + (bDisabled ? " xul-checkbox_disabled" : "") + (bChecked ? " xul-checkbox_checked" : "") + (bChecked && bDisabled ? " xul-checkbox_checked_disabled xul-checkbox_disabled_checked" : "") + '">\
 				<div class="xul-checkbox--input"><br /></div>\
-				<div class="xul-checkbox--label">' +(this.attributes["label"] || '')+ '</div>';
+				<div class="xul-checkbox--label">' + (this.attributes["label"] ? ample.$encodeXMLCharacters(this.attributes["label"]) : '') + '</div>';
 };
 
 // Element Render: close

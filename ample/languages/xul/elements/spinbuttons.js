@@ -1,7 +1,7 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2009 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
@@ -52,16 +52,14 @@ cXULElement_spinbuttons.handlers	= {
 			this.$setPseudoClass("active", false, "button-down");
 			this.releaseCapture();
 		}
-	},
-	"DOMAttrModified":	function(oEvent) {
-		if (oEvent.target == this) {
-			switch (oEvent.attrName) {
-				case "disabled":
-					this.$setPseudoClass("disabled", oEvent.newValue == "true");
-					break;
-			}
-		}
 	}
+};
+
+cXULElement_spinbuttons.prototype.$mapAttribute	= function(sName, sValue) {
+	if (sName == "disabled")
+		this.$setPseudoClass("disabled", sValue == "true");
+	else
+		cXULElement.prototype.$mapAttribute.call(this, sName, sValue);
 };
 
 //

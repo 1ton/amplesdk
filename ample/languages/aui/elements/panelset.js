@@ -1,7 +1,7 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2009 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
@@ -68,14 +68,12 @@ cAUIElement_panelset.prototype.refresh	= function() {
 };
 
 // Renderers
-cAUIElement_panelset.prototype.$getTagOpen	= function()
-{
-	return '<div class="aml-panelset' + (this.hasAttribute("rows") ? ' aml-panelset-rows-' : this.hasAttribute("cols") ? ' aml-panelset-cols-' : '')+ '"' + (this.attributes["style"] ? ' style="' + this.attributes["style"] + '"' : '') + '>';
+cAUIElement_panelset.prototype.$getTagOpen	= function() {
+	return '<div class="aui-panelset' + (this.hasAttribute("rows") ? ' aui-panelset-rows-' : this.hasAttribute("cols") ? ' aui-panelset-cols-' : '')+ '"' + (this.attributes["style"] ? ' style="' + this.attributes["style"] + '"' : '') + '>';
 };
 
-cAUIElement_panelset.prototype.$getTagClose	= function()
-{
-    return 	'</div>';
+cAUIElement_panelset.prototype.$getTagClose	= function() {
+	return '</div>';
 };
 
 // Register Element

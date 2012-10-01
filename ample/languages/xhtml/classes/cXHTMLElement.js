@@ -1,7 +1,7 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2009 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
@@ -21,24 +21,20 @@ cXHTMLElement.prototype.$isAccessible	= function() {
 	return !this.attributes["disabled"];
 };
 
-// Static method
-cXHTMLElement.mapAttribute	= function(oElement, sName, sValue) {
+cXHTMLElement.prototype.$mapAttribute	= function(sName, sValue) {
 	switch (sName) {
 		case "tabIndex":
-			oElement.tabIndex	= isNaN(sValue) ? -1 : sValue * 1;
+			this.tabIndex	= isNaN(sValue) ? -1 : sValue * 1;
 			break;
 
 		case "accessKey":
-			oElement.accessKey	= sValue || null;
-			break;
-
-		case "id":
-		case "class":
-		case "style":
+			this.accessKey	= sValue || null;
 			break;
 
 		default:
-			oElement.$getContainer()[sName]	= sValue;
+			var oContainer	= this.$getContainer();
+			if (oContainer)
+				oContainer[sName]	= sValue;
 	}
 };
 
@@ -56,17 +52,17 @@ cXHTMLElement.html524	= {
 
 // Default Element Render: open
 cXHTMLElement.prototype.$getTagOpen	= function() {
-	var sHtml   = '<' + (this.localName in cXHTMLElement.html524 ? cXHTMLElement.html524[this.localName] : this.localName);
+	var sHtml	= '<' + (this.localName in cXHTMLElement.html524 ? cXHTMLElement.html524[this.localName] : this.localName);
 	for (var sName in this.attributes)
 		if (this.attributes.hasOwnProperty(sName) && sName != "class" && sName != "id" && sName.indexOf(':') ==-1)
-			sHtml  += ' ' + sName + '="' + this.getAttribute(sName).replace(/"/g, '\"') + '"';
+			sHtml	+= ' ' + sName + '="' + ample.$encodeXMLCharacters(this.attributes[sName]) + '"';
 	sHtml	+= ' class="' + (this.prefix ? this.prefix + '-' : '') + this.localName + ("class" in this.attributes ? ' ' + this.attributes["class"] : '') + '"';
-    return sHtml + '>';
+	return sHtml + '>';
 };
 
 // Default Element Render: close
 cXHTMLElement.prototype.$getTagClose	= function() {
-    return '</' + (this.localName in cXHTMLElement.html524 ? cXHTMLElement.html524[this.localName] : this.localName) + '>';
+	return '</' + (this.localName in cXHTMLElement.html524 ? cXHTMLElement.html524[this.localName] : this.localName) + '>';
 };
 
 // Register Element

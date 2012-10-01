@@ -1,7 +1,7 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2009 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
@@ -13,50 +13,32 @@ cXULElement_listcell.prototype	= new cXULElement("listcell");
 // Public Methods
 
 // Class Events Handlers
-cXULElement_listcell.handlers	= {
-	"DOMAttrModified":	function(oEvent) {
-		if (oEvent.target == this) {
-			switch (oEvent.attrName)  {
-				case "label":
-			        this.$getContainer("gateway").innerHTML  =(this.attributes["src"] ? '<img src="' + this.attributes["src"] + '" align="absmiddle" /> ' :'') + (oEvent.newValue || '');
-					break;
 
-				case "src":
-			        this.$getContainer("gateway").innerHTML  =(oEvent.newValue ? '<img src="' + oEvent.newValue + '" align="absmiddle" /> ' :'') + (this.attributes["label"] || '');
-					break;
-
-				default:
-					this.$mapAttribute(oEvent.attrName, oEvent.newValue);
-			}
-		}
-	},
-	"DOMNodeInsertedIntoDocument":	function(oEvent) {
-		if (this.parentNode instanceof cXULElement_listitem)
-			this.parentNode.cells.$add(oEvent.target);
-	},
-	"DOMNodeRemovedFromDocument":	function(oEvent) {
-		if (this.parentNode instanceof cXULElement_listitem)
-			this.parentNode.cells.$remove(oEvent.target);
-	}
+cXULElement_listcell.prototype.$mapAttribute	= function(sName, sValue) {
+	if (sName == "label")
+		this.$getContainer("gateway").innerHTML	=(this.attributes["src"] ? '<img src="' + this.attributes["src"] + '" align="absmiddle" /> ' :'') + (sValue || '');
+	else
+	if (sName == "src")
+		this.$getContainer("gateway").innerHTML	=(sValue ? '<img src="' + sValue + '" align="absmiddle" /> ' :'') + (this.attributes["label"] || '');
+	else
+		cXULElement.prototype.$mapAttribute.call(this, sName, sValue);
 };
 
 // Element Render: open
-cXULElement_listcell.prototype.$getTagOpen	= function()
-{
+cXULElement_listcell.prototype.$getTagOpen	= function() {
 	var oHeader	= this.parentNode.parentNode.parentNode.firstChild.childNodes[this.parentNode.childNodes.$indexOf(this)];
-    var sHtml   = '<td class="xul-listcell' + (this.attributes["class"] ? " " + this.attributes["class"] : "") + '"' + (oHeader && oHeader.attributes["hidden"] == "true" ? ' style="display:none;"' : '') + '><div class="xul-listcell--box" style="position:relative;width:100%;"><div class="xul-listcell--label xul-listcell--gateway" style="position:absolute;width:100%;overflow:hidden;">';
-    if (this.attributes["image"])
-        sHtml  += '<img src="' + this.attributes["image"] + '" align="absmiddle"/> ';
-    if (this.attributes["label"])
-        sHtml  += this.attributes["label"];
+	var sHtml	= '<td class="xul-listcell' + (this.attributes["class"] ? " " + this.attributes["class"] : "") + '"' + (oHeader && oHeader.attributes["hidden"] == "true" ? ' style="display:none;"' : '') + '><div class="xul-listcell--box" style="position:relative;width:100%;"><div class="xul-listcell--label xul-listcell--gateway" style="position:absolute;width:100%;overflow:hidden;">';
+	if (this.attributes["image"])
+		sHtml	+= '<img src="' + ample.$encodeXMLCharacters(this.attributes["image"]) + '" align="absmiddle"/> ';
+	if (this.attributes["label"])
+		sHtml	+= ample.$encodeXMLCharacters(this.attributes["label"]);
 
-    return sHtml;
+	return sHtml;
 };
 
 // Element Render: close
-cXULElement_listcell.prototype.$getTagClose	= function()
-{
-    return '</div></div></td>';
+cXULElement_listcell.prototype.$getTagClose	= function() {
+	return '</div></div></td>';
 };
 
 // Register Element

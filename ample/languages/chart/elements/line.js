@@ -1,7 +1,7 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2009 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
@@ -65,16 +65,19 @@ cChartElement_line.prototype.refresh	= function() {
 	cChartElement.setPath(this.$getContainer("grid"), d.join(''));
 
 	var aYSumUp	=[],
-		nYFromPrev = 250, nYToPrev = 250, dPrev = [];
+		nYFromPrev	= 250,
+		nYToPrev	= 250,
+		dPrev	= [];
 	// Draw lines
 	for (var nGroup = 0, nGroups = aData.length, oGroup; nGroup < nGroups; nGroup++) {
 		// Get DOM element
-		oGroup = this.childNodes[nGroup];
+		oGroup	= this.childNodes[nGroup];
 
 		// Draw points
 		var nXFrom, nYFrom,
 			nXTo, nYTo,
-			nX, nY,	d = [];
+			nX, nY,
+			d	= [];
 		for (var nItem = 0, nItems = aData[nGroup].length; nItem < nItems; nItem++) {
 			//
 			if (aYSumUp.length < nItem + 1)
@@ -141,18 +144,18 @@ if (!cChartElement.useVML) {
 	cChartElement_line.prototype.$getTagOpen	= function() {
 		return '<div class="c-line' +(this.hasAttribute("class") ? ' ' + this.getAttribute("class") : '')+ '" style="' + this.getAttribute("style") + '">\
 					<svg:svg class="c-line--canvas" viewBox="0 0 600 300" width="100%" height="100%" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">\
-						<svg:text class="c-line--title" y="30" x="300">' + this.getAttribute("title")+ '</svg:text>\
+						<svg:text class="c-line--title" y="30" x="300">' + ample.$encodeXMLCharacters(this.getAttribute("title")) + '</svg:text>\
 						<svg:rect x="460" y="50" width="120" height="120" rx="10" class="c-legend"/>\
 						<svg:path class="c-grid c-line--grid"/>\
 						<svg:g class="c-xAxis">\
 							<svg:path class="c-line--xAxis" d="m50,250 h400,0" style="fill:none"/>\
 							<svg:path id="x' + this.uniqueID + '" d="m300,280 h400,0" style="fill:none;stroke:none"/>\
-							<svg:text class="c-xAxis--label c-line--xAxisLabel"><svg:textPath xlink:href="#x' + this.uniqueID + '">' + this.getAttribute("xAxisLabel")+ '</svg:textPath></svg:text>\
+							<svg:text class="c-xAxis--label c-line--xAxisLabel"><svg:textPath xlink:href="#x' + this.uniqueID + '">' + ample.$encodeXMLCharacters(this.getAttribute("xAxisLabel")) + '</svg:textPath></svg:text>\
 						</svg:g>\
 						<svg:g class="c-yAxis">\
 							<svg:path class="c-line--yAxis" d="m50,250 v0,-200" style="fill:none"/>\
 							<svg:path id="y' + this.uniqueID + '" d="m30,200 v0,-200" style="fill:none;stroke:none"/>\
-							<svg:text class="c-yAxis--label c-line--yAxisLabel"><svg:textPath xlink:href="#y' + this.uniqueID + '">' + this.getAttribute("yAxisLabel")+ '</svg:textPath></svg:text>\
+							<svg:text class="c-yAxis--label c-line--yAxisLabel"><svg:textPath xlink:href="#y' + this.uniqueID + '">' + ample.$encodeXMLCharacters(this.getAttribute("yAxisLabel")) + '</svg:textPath></svg:text>\
 						</svg:g>\
 						<svg:g class="c-line--gateway">';
 	};
@@ -234,7 +237,7 @@ else {
 					<chart2vml:group class="c-line--canvas" style="position:absolute;display:none;" coordOrigin="0 0" coordSize="600 300">\
 						<chart2vml:shape class="c-line--title" path="m0,0 l600,0" fillcolor="black" stroked="false" allowoverlap="true" style="position:absolute;width:100%;height:100%;top:30px;xleft:150px">\
 							<chart2vml:path textpathok="true" />\
-							<chart2vml:textpath on="true" string="' + this.getAttribute("title")+ '" style="v-text-align:center"/>\
+							<chart2vml:textpath on="true" string="' + ample.$encodeXMLCharacters(this.getAttribute("title")) + '" style="v-text-align:center"/>\
 						</chart2vml:shape>\
 						<chart2vml:shape path="' + cChartElement.roundRectPath(460, 50, 120, 120, 10, 10) + '" class="c-legend c-line--legend" style="position:absolute;width:100%;height:100%"/>\
 						<chart2vml:shape class="c-grid c-line--grid" style="position:absolute;width:100%;height:100%"/>\
@@ -242,7 +245,7 @@ else {
 							<chart2vml:shape class="c-line--xAxis" path="m50,250 r400,0 e" style="position:absolute;width:100%;height:100%"/>\
 							<chart2vml:shape class="c-xAxis--label c-line--xAxisLabel" path="m50,280 r400,0 e" fillcolor="black" stroked="false" allowoverlap="true" style="position:absolute;width:100%;height:100%">\
 								<chart2vml:path textpathok="true" />\
-								<chart2vml:textpath on="true" string="' + this.getAttribute("xAxisLabel")+ '" style="v-text-align:right"/>\
+								<chart2vml:textpath on="true" string="' + ample.$encodeXMLCharacters(this.getAttribute("xAxisLabel")) + '" style="v-text-align:right"/>\
 							</chart2vml:shape>\
 							<chart2vml:shape class="c-xAxis--marks c-line--xAxisMarks" style="position:absolute;width:100%;height:100%"/>\
 							<chart2vml:group class="c-xAxis--scale c-line--xAxisItems" style="top:3px"/>\
@@ -251,7 +254,7 @@ else {
 							<chart2vml:shape class="c-line--yAxis" path="m50,250 r0,-200 e" style="position:absolute;width:100%;height:100%"/>\
 							<chart2vml:shape class="c-yAxis--label c-line--yAxisLabel" path="m20,250 r0,-200 e" fillcolor="black" stroked="false" allowoverlap="true" style="position:absolute;width:100%;height:100%">\
 								<chart2vml:path textpathok="true" />\
-								<chart2vml:textpath on="true" string="' + this.getAttribute("yAxisLabel")+ '" style="v-text-align:right"/>\
+								<chart2vml:textpath on="true" string="' + ample.$encodeXMLCharacters(this.getAttribute("yAxisLabel")) + '" style="v-text-align:right"/>\
 							</chart2vml:shape>\
 							<chart2vml:shape class="c-yAxis--marks c-line--yAxisMarks" style="position:absolute;width:100%;height:100%"/>\
 							<chart2vml:group class="c-yAxis--scale c-line--yAxisItems" style="top:3px"/>\

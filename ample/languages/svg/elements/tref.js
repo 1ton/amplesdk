@@ -1,7 +1,7 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2009 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
@@ -13,35 +13,12 @@ cSVGElement_tref.prototype	= new cSVGElement("tref");
 if (cSVGElement.useVML) {
 
 	cSVGElement_tref.handlers	= {
-		'DOMAttrModified':	function(oEvent) {
-			if (oEvent.target == this) {
-				switch (oEvent.attrName) {
-					case "x":
-					case "y":
-					case "dx":
-					case "dy":
-						var nLeft	=((this.getAttribute("x") || (this.parentNode ? this.parentNode.getAttribute("x") : "0")).match(/([0-9\.]+)?/)[1] * 1 || 0) + (this.getAttribute("dx") * 1 || 0),
-							nTop	=((this.getAttribute("y") || (this.parentNode ? this.parentNode.getAttribute("y") : "0")).match(/([0-9\.]+)?/)[1] * 1 || 0) + (this.getAttribute("dy") * 1 || 0);
-						this.$getContainer().path	= 'm ' + [nLeft, nTop].map(Math.round) + ' r 1000,0 x';
-						break;
-					case "xlink:href":
-						var oTextPath = this.ownerDocument.getElementById(oEvent.newValue.substr(1));
-						if (oTextPath)
-							this.$getContainer().path	= cSVGElement_path.convert(oTextPath.getAttribute("d"));
-						break;
-				}
-			}
-		},
 		'DOMNodeInsertedIntoDocument':	function(oEvent) {
-			var sHref	= this.getAttribute("xlink:href"),
-				that	= this;
-			if (sHref) {
-				setTimeout(function() {
-					var oRef	= that.ownerDocument.getElementById(sHref.substr(1));
-					if (oRef instanceof cSVGElement_text && oRef.firstChild instanceof ample.classes.CharacterData)
-						that.$getContainer().getElementsByTagName("textpath")[0].string	= oRef.firstChild.data.replace(/^\s+/, '').replace(/\s+$/, '').replace(/&gt;/g, '>').replace(/&lt;/g, '<').replace(/&amp;/g, '&');
-				}, 0);
-			}
+			var sValue;
+			//
+			if (sValue = this.getAttribute("xlink:href"))
+				this.$mapAttribute("xlink:href", sValue);
+
 			// Apply transform
 			cSVGElement.applyTransform(this);
 
@@ -50,12 +27,31 @@ if (cSVGElement.useVML) {
 		}
 	};
 
+	cSVGElement_tref.prototype.$mapAttribute	= function(sName, sValue) {
+		if (sName == "x" || sName == "y" || sName == "dx" || sName == "dy") {
+			var nLeft	=((this.getAttribute("x") || (this.parentNode ? this.parentNode.getAttribute("x") : "0")).match(/([0-9\.]+)?/)[1] * 1 || 0) + (this.getAttribute("dx") * 1 || 0),
+				nTop	=((this.getAttribute("y") || (this.parentNode ? this.parentNode.getAttribute("y") : "0")).match(/([0-9\.]+)?/)[1] * 1 || 0) + (this.getAttribute("dy") * 1 || 0);
+			this.$getContainer().path	= 'm ' + [nLeft, nTop].map(Math.round) + ' r 1000,0 x';
+		}
+		else
+		if (sName == "xlink:href") {
+			if (sValue) {
+				var that	= this;
+				setTimeout(function() {
+					var oRef	= that.ownerDocument.getElementById(sValue.substr(1));
+					if (oRef instanceof cSVGElement_text && oRef.firstChild instanceof ample.classes.CharacterData)
+						that.$getContainer().getElementsByTagName("textpath")[0].string	= oRef.firstChild.data.replace(/^\s+/, '').replace(/\s+$/, '');
+				}, 0);
+			}
+		}
+	};
+
 	// presentation
 	cSVGElement_tref.prototype.$getTagOpen	= function() {
-		var sFontFamily	= cSVGElement.getStyle(this, "font-family") || "Times New Roman",
-			sFontWeight	= cSVGElement.getStyle(this, "font-weight"),
-			sFontSize	= cSVGElement.getStyle(this, "font-size"),
-			sTextAnchor	= cSVGElement.getStyle(this, "text-anchor"),
+		var sFontFamily	= this.$getStyleComputed("font-family") || "Times New Roman",
+			sFontWeight	= this.$getStyleComputed("font-weight"),
+			sFontSize	= this.$getStyleComputed("font-size"),
+			sTextAnchor	= this.$getStyleComputed("text-anchor"),
 			nLeft	=((this.getAttribute("x") || (this.parentNode ? this.parentNode.getAttribute("x") : "0")).match(/([0-9\.]+)?/)[1] * 1 || 0) + (this.getAttribute("dx") * 1 || 0),
 			nTop	=((this.getAttribute("y") || (this.parentNode ? this.parentNode.getAttribute("y") : "0")).match(/([0-9\.]+)?/)[1] * 1 || 0) + (this.getAttribute("dy") * 1 || 0),
 			// Font size calculations
