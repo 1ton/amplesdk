@@ -1,7 +1,7 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2010 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
@@ -199,7 +199,7 @@ oAmple.get	= function(sUrl, vData, fCallback, sType) {
 oAmple.post	= function(sUrl, vData, fCallback, sType) {
 //->Guard
 	fGuard(arguments, [
-   		["url",		cString],
+			["url",		cString],
 		["data",	cObject,	true,	true],
 		["success",	cFunction,	true],
 		["dataType",cString,	true]
@@ -222,7 +222,7 @@ cQuery.prototype.load	= function(sUrl, vData, fCallback) {
 	fGuard(arguments, [
 		["url",		cString],
 		["data",	cObject,	true,	true],
-		["success",	cFunction,	true]
+		["complete",cFunction,	true]
 	]);
 //<-Guard
 

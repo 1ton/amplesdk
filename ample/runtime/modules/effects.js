@@ -1,7 +1,7 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2010 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
@@ -111,16 +111,21 @@ cQuery.prototype.fadeTo	= function(vDuration, nOpacity, fCallback) {
 cQuery.prototype.show	= function(vDuration, fCallback) {
 //->Guard
 	fGuard(arguments, [
-   		["duration",	cObject, true],
-   		["callback",	cFunction, true]
-   	]);
+			["duration",	cObject, true],
+			["callback",	cFunction, true]
+		]);
 //<-Guard
 
 	fQuery_each(this, function() {
 		var oElementDOM	= this.$getContainer(),
+			sStyle	= this.attributes.style,
 			oStyle	= oElementDOM.style;
 		if (oStyle.display == "none") {
+			if (sStyle)
+				this.attributes.style	= sStyle.replace(/display\s*:\s*[\w-]+\s*;?/, '');
+			//
 			oStyle.display	= '';
+			//
 			if (vDuration) {
 				var oProperties	= {},
 					oComputedStyle	= fBrowser_getComputedStyle(oElementDOM);
@@ -152,9 +157,9 @@ cQuery.prototype.show	= function(vDuration, fCallback) {
 cQuery.prototype.hide	= function(vDuration, fCallback) {
 //->Guard
 	fGuard(arguments, [
-   		["duration",	cObject, true],
-   		["callback",	cFunction, true]
-   	]);
+			["duration",	cObject, true],
+			["callback",	cFunction, true]
+		]);
 //<-Guard
 
 	fQuery_each(this, function() {
@@ -170,6 +175,11 @@ cQuery.prototype.hide	= function(vDuration, fCallback) {
 				oStyle.overflow	= "hidden";
 				fBrowser_setStyle(oElementDOM, "opacity", '1');
 				fNodeAnimation_play(this, oProperties, vDuration, "ease", function() {
+					var sStyle	= this.attributes.style || '';
+					if (sStyle)
+						sStyle	= sStyle.replace(/display\s*:\s*[\w-]+\s*;?/, '');
+					this.attributes.style	= "display" + ':' + "none" + ';' + sStyle;
+					//
 					oStyle.display	= "none";
 					// Restore values
 					oStyle.width	= '';

@@ -1,7 +1,7 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2009 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
@@ -24,8 +24,7 @@ cGestureEvent.prototype.shiftKey	= null;
 cGestureEvent.prototype.rotation	= null;
 cGestureEvent.prototype.scale		= null;
 
-cGestureEvent.prototype.initGestureEvent	= function(sType, bCanBubble, bCancelable, oView, nDetail, nScreenX, nScreenY, nClientX, nClientY, bCtrlKey, bAltKey, bShiftKey, bMetaKey, oTarget, nScale, nRotation)
-{
+cGestureEvent.prototype.initGestureEvent	= function(sType, bCanBubble, bCancelable, oView, nDetail, nScreenX, nScreenY, nClientX, nClientY, bCtrlKey, bAltKey, bShiftKey, bMetaKey, oTarget, nScale, nRotation) {
 	this.initUIEvent(sType, bCanBubble, bCancelable, oView, nDetail);
 
 	this.ctrlKey	= bCtrlKey;

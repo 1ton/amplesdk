@@ -1,7 +1,7 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2010 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
@@ -14,7 +14,7 @@ function cXPathEvaluator() {
 cXPathEvaluator.prototype.createExpression	= function(sExpression, oResolver) {
 	// validate API
 	ample.guard(arguments, [
-		["expression",	String],
+		["expression",	cString],
 		["resolver",	cXPathNSResolver,	true,	true]
 	]);
 
@@ -25,7 +25,7 @@ cXPathEvaluator.prototype.createExpression	= function(sExpression, oResolver) {
 cXPathEvaluator.prototype.createNSResolver	= function(oNode) {
 	// validate API
 	ample.guard(arguments, [
-		["node",	Node]
+		["node",	cNode]
 	]);
 
 	// Invoke implementation
@@ -35,10 +35,10 @@ cXPathEvaluator.prototype.createNSResolver	= function(oNode) {
 cXPathEvaluator.prototype.evaluate	= function(sExpression, oNode, oResolver, nType, oResult) {
 	// validate API
 	ample.guard(arguments, [
-		["expression",	String],
-		["context",		Node],
+		["expression",	cString],
+		["context",		cNode],
 		["resolver",	cXPathNSResolver,	true,	true],
-		["type",		Number,				true,	true],
+		["type",		cNumber,				true,	true],
 		["result",		cXPathResult,		true,	true]
 	]);
 

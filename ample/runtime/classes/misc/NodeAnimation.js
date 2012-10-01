@@ -1,7 +1,7 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2009 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
@@ -41,7 +41,7 @@ function fNodeAnimation_play(oElement, oProperties, vDuration, vType, fHandler, 
 			if (sKey == "scrollTop" || sKey == "scrollLeft")
 				oEffect._data[sKey]	= [[oElementDOM[sKey]], [sValue]];
 			else
-				oEffect._data[sName = fUtilities_toCssPropertyName(sKey)]	= [fNodeAnimation_parseValue(fBrowser_adjustStyleValue(oElementDOM, sName, fBrowser_getStyle(oElementDOM, sName, oComputedStyle))), fNodeAnimation_parseValue(fBrowser_adjustStyleValue(oElementDOM, sName, sValue))];
+				oEffect._data[sName	= fUtilities_toCssPropertyName(sKey)]	= [fNodeAnimation_parseValue(fBrowser_adjustStyleValue(oElementDOM, sName, fBrowser_getStyle(oElementDOM, sName, oComputedStyle))), fNodeAnimation_parseValue(fBrowser_adjustStyleValue(oElementDOM, sName, sValue))];
 		}
 
 	// delete running effects on new effect properties for the same element
@@ -217,8 +217,7 @@ function fNodeAnimation_parseValue(sValue) {
 	sValue	= sValue.trim();
 
 	var aValue,
-		nIndex,
-		sValueLower = sValue.toLowerCase();
+		sValueLower	= sValue.toLowerCase();
 
 	// if standard color used
 	if (sValueLower in hBrowser_cssColors)
@@ -251,12 +250,12 @@ function fNodeAnimation_parseValue(sValue) {
 		}
 		else {
 			if (aValue = sParameters.split(/\s*,\s*/g)) {
-				for (var nIndex = 0, oValue, oValueOut = [[], '', '']; nIndex < aValue.length; nIndex++)
+				for (var nIndex = 0, oValue, oValue2 = [[], '', '']; nIndex < aValue.length; nIndex++)
 					if (oValue = fNodeAnimation_parseValue(aValue[nIndex]))
-						oValueOut[0].push(oValue[0]);
-				oValueOut[2]	= sFunction;
-				if (oValueOut[0].length)
-					return oValueOut;
+						oValue2[0].push(oValue[0]);
+				oValue2[2]	= sFunction;
+				if (oValue2[0].length)
+					return oValue2;
 			}
 		}
 	}
@@ -265,14 +264,14 @@ function fNodeAnimation_parseValue(sValue) {
 		return [cNumber(aValue[1]), aValue[2] || '', ''];
 	// List of values
 	if ((aValue = sValue.split(/\s*,\s*|\s+/)) && aValue.length > 1) {
-		for (var nIndex = 0, oValue, oValueOut = [[], '', '']; nIndex < aValue.length; nIndex++) {
+		for (var nIndex = 0, oValue, oValue2 = [[], '', '']; nIndex < aValue.length; nIndex++) {
 			if (oValue = fNodeAnimation_parseValue(aValue[nIndex])) {
-				oValueOut[0].push(oValue[0]);
-				oValueOut[1]	= oValue[1];
+				oValue2[0].push(oValue[0]);
+				oValue2[1]	= oValue[1];
 			}
 		}
-		if (oValueOut[0].length)
-			return oValueOut;
+		if (oValue2[0].length)
+			return oValue2;
 	}
 	//
 	return [sValue, '', ''];
@@ -282,24 +281,24 @@ function fNodeAnimation_toHex(aValue) {
 	return ['#', ('000000' + (aValue[2] * 255 | (aValue[1] * 255 << 8) | (aValue[0] * 255 << 16)).toString(16)).slice(-6)];
 };
 
-function fNodeAnimation_sumValue(oValue1, oValue2) {
-	if (oValue1[0] instanceof cArray) {
-		for (var nIndex = 0, aValue = []; nIndex < oValue1[0].length; nIndex++)
-			aValue.push(oValue1[0][nIndex] + oValue2[0][nIndex]);
+function fNodeAnimation_sumValue(oValue, oValue2) {
+	if (oValue[0] instanceof cArray) {
+		for (var nIndex = 0, aValue = []; nIndex < oValue[0].length; nIndex++)
+			aValue.push(oValue[0][nIndex] + oValue2[0][nIndex]);
 		return [aValue, oValue2[1], oValue2[2]];
 	}
 	else
-		return [oValue1[0] + oValue2[0], oValue2[1], oValue2[2]];
+		return [oValue[0] + oValue2[0], oValue2[1], oValue2[2]];
 };
 
-function fNodeAnimation_subValue(oValue1, oValue2) {
-	if (oValue1[0] instanceof cArray) {
-		for (var nIndex = 0, aValue = []; nIndex < oValue1[0].length; nIndex++)
-			aValue.push(oValue1[0][nIndex] - oValue2[0][nIndex]);
+function fNodeAnimation_subValue(oValue, oValue2) {
+	if (oValue[0] instanceof cArray) {
+		for (var nIndex = 0, aValue = []; nIndex < oValue[0].length; nIndex++)
+			aValue.push(oValue[0][nIndex] - oValue2[0][nIndex]);
 		return [aValue, oValue2[1], oValue2[2]];
 	}
 	else
-		return [oValue1[0] - oValue2[0], oValue1[1], oValue1[2]];
+		return [oValue[0] - oValue2[0], oValue[1], oValue[2]];
 };
 
 function fNodeAnimation_mulValue(oValue, nTimes) {
@@ -317,57 +316,57 @@ function fNodeAnimation_cubicBezier(t, a, b, c, d, nDuration) {
 	// Calculate the polynomial coefficients, implicit first and last control points are (0,0) and (1,1).
 	var cx=3*a, bx=3*(c-a)-cx, ax=1-cx-bx, cy=3*b, by=3*(d-b)-cy, ay=1-cy-by;
 	// `ax t^3 + bx t^2 + cx t' expanded using Horner's rule.
-    function fSampleCurveX(t) {
-    	return ((ax*t+bx)*t+cx)*t;
-    };
-    function fSampleCurveY(t) {
-    	return ((ay*t+by)*t+cy)*t;
-    };
-    function fSampleCurveDerivativeX(t) {
-    	return (3*ax*t+2*bx)*t+cx;
-    };
+	function fSampleCurveX(t) {
+		return ((ax*t+bx)*t+cx)*t;
+	};
+	function fSampleCurveY(t) {
+		return ((ay*t+by)*t+cy)*t;
+	};
+	function fSampleCurveDerivativeX(t) {
+		return (3*ax*t+2*bx)*t+cx;
+	};
 	// The epsilon value to pass given that the animation is going to run over |dur| seconds. The longer the
 	// animation, the more precision is needed in the timing function result to avoid ugly discontinuities.
 	function fSolveEpsilon(nDuration) {
 		return 1/(200*nDuration);
 	};
-    function fSolve(x,nEpsilon) {
-    	return fSampleCurveY(fSolveCurveX(x,nEpsilon));
-    };
+	function fSolve(x,nEpsilon) {
+		return fSampleCurveY(fSolveCurveX(x,nEpsilon));
+	};
 	// Given an x value, find a parametric value it came from.
-    function fSolveCurveX(x,nEpsilon) {
-    	var t0,t1,t2,x2,d2,i;
+	function fSolveCurveX(x,nEpsilon) {
+		var t0,t1,t2,x2,d2,i;
 		function fFabs(n) {
 			return n >= 0 ? n : 0-n;
 		}
-        // First try a few iterations of Newton's method -- normally very fast.
-        for (t2=x, i=0; i<8; i++) {
-        	x2=fSampleCurveX(t2)-x;
-        	if(fFabs(x2)<nEpsilon)
-        		return t2;
-        	d2=fSampleCurveDerivativeX(t2);
-        	if (fFabs(d2) < 1e-6)
-        		break;
-        	t2=t2-x2/d2;
-        }
-        // Fall back to the bisection method for reliability.
-        t0=0; t1=1; t2=x;
-        if(t2<t0)
-        	return t0;
-        if(t2>t1)
-        	return t1;
-        while(t0<t1) {
-        	x2=fSampleCurveX(t2);
-        	if(fFabs(x2-x)<nEpsilon)
-        		return t2;
-        	if(x>x2)
-        		t0=t2;
-        	else
-        		t1=t2;
-        	t2=(t1-t0)/2+t0;
-        }
-        return t2; // Failure.
-    };
+		// First try a few iterations of Newton's method -- normally very fast.
+		for (t2=x, i=0; i<8; i++) {
+			x2=fSampleCurveX(t2)-x;
+			if(fFabs(x2)<nEpsilon)
+				return t2;
+			d2=fSampleCurveDerivativeX(t2);
+			if (fFabs(d2) < 1e-6)
+				break;
+			t2=t2-x2/d2;
+		}
+		// Fall back to the bisection method for reliability.
+		t0=0; t1=1; t2=x;
+		if(t2<t0)
+			return t0;
+		if(t2>t1)
+			return t1;
+		while(t0<t1) {
+			x2=fSampleCurveX(t2);
+			if(fFabs(x2-x)<nEpsilon)
+				return t2;
+			if(x>x2)
+				t0=t2;
+			else
+				t1=t2;
+			t2=(t1-t0)/2+t0;
+		}
+		return t2; // Failure.
+	};
 	// Convert from input time to parametric value in curve, then from that to output time.
 	return fSolve(t, fSolveEpsilon(nDuration));
 };

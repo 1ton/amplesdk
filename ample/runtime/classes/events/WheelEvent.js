@@ -1,7 +1,7 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2009 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
@@ -13,8 +13,8 @@ cWheelEvent.prototype.eventInterface	= "WheelEvent";
 
 // Constants
 cWheelEvent.DOM_DELTA_PIXEL	= 0;
-cWheelEvent.DOM_DELTA_LINE 	= 1;
-cWheelEvent.DOM_DELTA_PAGE 	= 2;
+cWheelEvent.DOM_DELTA_LINE	= 1;
+cWheelEvent.DOM_DELTA_PAGE	= 2;
 
 // nsIWheelEvent
 cWheelEvent.prototype.deltaMode	= null;
@@ -22,8 +22,7 @@ cWheelEvent.prototype.deltaX	= null;
 cWheelEvent.prototype.deltaY	= null;
 cWheelEvent.prototype.deltaZ	= null;
 
-cWheelEvent.prototype.initWheelEvent	= function(sType, bCanBubble, bCancelable, oView, nDetail, nScreenX, nScreenY, nClientX, nClientY, nButton, oRelatedTarget, sModifiersList, nDeltaX, nDeltaY, nDeltaZ, nDeltaMode)
-{
+cWheelEvent.prototype.initWheelEvent	= function(sType, bCanBubble, bCancelable, oView, nDetail, nScreenX, nScreenY, nClientX, nClientY, nButton, oRelatedTarget, sModifiersList, nDeltaX, nDeltaY, nDeltaZ, nDeltaMode) {
 /*
 //->Guard
 	fGuard(arguments, [

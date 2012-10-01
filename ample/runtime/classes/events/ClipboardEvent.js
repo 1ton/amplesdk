@@ -1,7 +1,7 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2009 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
@@ -14,8 +14,7 @@ cClipboardEvent.prototype.eventInterface	= "ClipboardEvent";
 // nsIDOMClipboardEvent
 cClipboardEvent.prototype.clipboardData	= null;
 
-cClipboardEvent.prototype.initClipboardEvent	= function(sType, bCanBubble, bCancelable, sType, vData)
-{
+cClipboardEvent.prototype.initClipboardEvent	= function(sType, bCanBubble, bCancelable, sType, vData) {
 //->Guard
 	fGuard(arguments, [
 		["type",		cString],

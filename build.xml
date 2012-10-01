@@ -17,7 +17,7 @@
 
 	<!-- Project-related -->
 	<property name="copyright.year" value="${tstamp.year}" />
-	<property name="copyright.name" value="Clientside OY" />
+	<property name="copyright.name" value="Sergey Ilinsky" />
 
 	<!-- Build-related -->
 	<property name="build.package" value="ample-${project.version}" />
@@ -103,10 +103,6 @@
 			<filelist dir="${source.runtime.dir}/" files="
 				export.js"/>
 		</concat>
-		<replace file="${temp.runtime.dir}/runtime-raw.js">
-			<replacefilter token="@project.version@"	value="${project.name}/${project.version} (build:${build.signature})"	/>
-			<replacefilter token="@project.userAgent@"	value="${project.name}/${project.version}"	/>
-		</replace>
 	</target>
 
 	<target name="BUILD_AMPLE_RUNTIME_PREPARE_CORE" unless="skip.ample.runtime.core">
@@ -174,8 +170,7 @@
 				ResizeManager.js,
 				DragAndDropManager.js,
 				SelectionManager.js,
-				CaptureManager.js,
-				TouchManager.js"/>
+				CaptureManager.js"/>
 			<!-- API Modules -->
 			<filelist dir="${source.runtime.dir}/modules/" files="
 				ajax.js,
@@ -214,8 +209,7 @@
 				String.js,
 				XMLHttpRequest.js,
 				XMLSerializer.js,
-				XSLTProcessor.js,
-				Storage.js"/>
+				XSLTProcessor.js"/>
 		</concat>
 	</target>
 
@@ -298,15 +292,19 @@
 		<exec executable="${executable.php}" failonerror="true">
 			<arg value="resources/compiler/js.php" />
 			<arg value="${temp.runtime.dir}/runtime-raw.js" />
-			<arg value="${temp.runtime.dir}/runtime.js" />
+			<arg value="${temp.runtime.dir}/runtime-prod.js" />
 			<arg value="--obfuscate" />
 			<arg value="--strip-Source" />
 			<arg value="--strip-Debug" />
 			<arg value="--strip-Guard" />
 		</exec>
-		<concat destfile="${target.runtime.dir}/runtime.js" fixlastline="yes">
+		<replace file="${temp.runtime.dir}/runtime-prod.js">
+			<replacefilter token="@project_version@"	value="${project.name}/${project.version} (build:${build.signature}; prod)"	/>
+			<replacefilter token="@project_userAgent@"	value="${project.name}/${project.version}"	/>
+		</replace>
+		<concat destfile="${target.runtime.dir}/runtime-prod.js" fixlastline="yes">
 			<fileset file="${copying.js}" />
-			<fileset file="${temp.runtime.dir}/runtime.js" />
+			<fileset file="${temp.runtime.dir}/runtime-prod.js" />
 		</concat>
 	</target>
 
@@ -315,13 +313,17 @@
 		<exec executable="${executable.php}" failonerror="true">
 			<arg value="resources/compiler/js.php" />
 			<arg value="${temp.runtime.dir}/runtime-raw.js" />
-			<arg value="${temp.runtime.dir}/runtime-dev.js" />
+			<arg value="${temp.runtime.dir}/runtime.js" />
 			<arg value="--obfuscate" />
 			<arg value="--strip-Source" />
 		</exec>
-		<concat destfile="${target.runtime.dir}/runtime-dev.js" fixlastline="yes">
+		<replace file="${temp.runtime.dir}/runtime.js">
+			<replacefilter token="@project_version@"	value="${project.name}/${project.version} (build:${build.signature})"	/>
+			<replacefilter token="@project_userAgent@"	value="${project.name}/${project.version}"	/>
+		</replace>
+		<concat destfile="${target.runtime.dir}/runtime.js" fixlastline="yes">
 			<fileset file="${copying.js}" />
-			<fileset file="${temp.runtime.dir}/runtime-dev.js" />
+			<fileset file="${temp.runtime.dir}/runtime.js" />
 		</concat>
 	</target>
 
@@ -401,8 +403,8 @@
 
 		<echo message="Copying default theme to: ${target.xhtml.dir}/themes/default/" level="info"/>
 		<mkdir dir="${target.xhtml.dir}/themes/default/" />
-		<copy tofile="${target.xhtml.dir}/themes/default/style-raw.css" file="${temp.languages.dir}/xhtml-raw.css" />
-		<copy tofile="${target.xhtml.dir}/themes/default/style.css" file="${temp.languages.dir}/xhtml.css" />
+		<copy tofile="${target.xhtml.dir}/themes/default/style.css" file="${temp.languages.dir}/xhtml-raw.css" />
+		<copy tofile="${target.xhtml.dir}/themes/default/style-prod.css" file="${temp.languages.dir}/xhtml.css" />
 		<copy todir="${target.xhtml.dir}/themes/default/">
 			<fileset dir="${source.xhtml.dir}/themes/default/">
 				<include name="media/**"/>
@@ -457,8 +459,8 @@
 
 		<echo message="Copying default theme to: ${target.aui.dir}/themes/default/" level="info"/>
 		<mkdir dir="${target.aui.dir}/themes/default/" />
-		<copy tofile="${target.aui.dir}/themes/default/style-raw.css" file="${temp.languages.dir}/aui-raw.css" />
-		<copy tofile="${target.aui.dir}/themes/default/style.css" file="${temp.languages.dir}/aui.css" />
+		<copy tofile="${target.aui.dir}/themes/default/style.css" file="${temp.languages.dir}/aui-raw.css" />
+		<copy tofile="${target.aui.dir}/themes/default/style-prod.css" file="${temp.languages.dir}/aui.css" />
 		<copy todir="${target.aui.dir}/themes/default/">
 			<fileset dir="${source.aui.dir}/themes/default/">
 				<include name="media/**"/>
@@ -522,8 +524,8 @@
 
 		<echo message="Copying default theme to: ${target.xul.dir}/themes/default/" level="info"/>
 		<mkdir dir="${target.xul.dir}/themes/default/" />
-		<copy tofile="${target.xul.dir}/themes/default/style-raw.css" file="${temp.languages.dir}/xul-raw.css" />
-		<copy tofile="${target.xul.dir}/themes/default/style.css" file="${temp.languages.dir}/xul.css" />
+		<copy tofile="${target.xul.dir}/themes/default/style.css" file="${temp.languages.dir}/xul-raw.css" />
+		<copy tofile="${target.xul.dir}/themes/default/style-prod.css" file="${temp.languages.dir}/xul.css" />
 		<copy todir="${target.xul.dir}/themes/default/">
 			<fileset dir="${source.xul.dir}/themes/default/">
 				<include name="media/**"/>
@@ -718,8 +720,8 @@
 		</concat>
 		<echo message="Copying default theme to: ${target.chart.dir}/themes/default/" level="info"/>
 		<mkdir dir="${target.chart.dir}/themes/default/" />
-		<copy tofile="${target.chart.dir}/themes/default/style-raw.css" file="${temp.languages.dir}/chart-raw.css" />
-		<copy tofile="${target.chart.dir}/themes/default/style.css" file="${temp.languages.dir}/chart.css" />
+		<copy tofile="${target.chart.dir}/themes/default/style.css" file="${temp.languages.dir}/chart-raw.css" />
+		<copy tofile="${target.chart.dir}/themes/default/style-prod.css" file="${temp.languages.dir}/chart.css" />
 		<copy todir="${target.chart.dir}/themes/default/">
 			<fileset dir="${source.chart.dir}/themes/default/">
 				<include name="media/**"/>
@@ -749,6 +751,7 @@
 		<antcall target="BUILD_AMPLE_PLUGINS_COOKIE" />
 		<antcall target="BUILD_AMPLE_PLUGINS_FORMS" />
 		<antcall target="BUILD_AMPLE_PLUGINS_STORE" />
+		<antcall target="BUILD_AMPLE_PLUGINS_TOUCH" />
 		<antcall target="BUILD_AMPLE_PLUGINS_XPATH" />
 		<antcall target="BUILD_AMPLE_PLUGINS_XSLT" />
 
@@ -837,6 +840,33 @@
 		</concat>
 	</target>
 
+	<target name="BUILD_AMPLE_PLUGINS_TOUCH" unless="skip.ample.plugins.touch">
+		<property name="source.touch.dir" value="${source.ample.plugins.dir}/touch/" />
+		<property name="target.touch.dir" value="${target.ample.plugins.dir}/touch/" />
+
+		<echo message="Merging into: ${temp.ample.plugins.dir}/touch-raw.js" level="info"/>
+		<concat destfile="${temp.ample.plugins.dir}/touch-raw.js" fixlastline="yes">
+			<fileset dir="${source.touch.dir}/">
+				<include name="touch.js" />
+			</fileset>
+		</concat>
+
+		<echo message="Wrapping into: ${temp.ample.plugins.dir}/touch-raw-wrapped.js" level="info"/>
+		<exec executable="${executable.php}" failonerror="true">
+			<arg value="resources/compiler/js.php" />
+			<arg value="${temp.ample.plugins.dir}/touch-raw.js" />
+			<arg value="${temp.ample.plugins.dir}/touch-raw-wrapped.js" />
+			<arg value="--strip-Source" />
+		</exec>
+
+		<!-- package -->
+		<mkdir dir="${target.touch.dir}" />
+		<concat destfile="${target.touch.dir}/touch.js" fixlastline="yes">
+			<fileset file="${copying.js}" />
+			<fileset file="${temp.ample.plugins.dir}/touch-raw-wrapped.js" />
+		</concat>
+	</target>
+
 	<target name="BUILD_AMPLE_PLUGINS_XPATH" unless="skip.ample.plugins.xpath">
 		<property name="source.xpath.dir" value="${source.ample.plugins.dir}/xpath/" />
 		<property name="target.xpath.dir" value="${target.ample.plugins.dir}/xpath/" />
@@ -906,18 +936,14 @@
 			<fileset dir="examples/">
 				<include name="helloworld.html" />
 				<include name="index.html" />
-				<include name="applications/**" />
+				<include name="applications/imclient/" />
+				<include name="applications/mail/" />
 				<include name="languages/**" />
 				<include name="managers/**" />
 				<include name="modules/**" />
 				<include name="plugins/**" />
 			</fileset>
 		</copy>
-		<replace dir="${target.dir}/examples/">
-			<include name="**/*.html"/>
-			<replacetoken><![CDATA[<link type="text/ample+css"]]></replacetoken>
-			<replacevalue><![CDATA[<link type="text/css"]]></replacevalue>
-		</replace>
 	</target>
 
 	<!-- Reference -->

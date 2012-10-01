@@ -1,7 +1,7 @@
 <?php
 	if (isset($_GET["path"])) {
 		$path	= $_GET["path"];
-		$dev	= isset($_GET["dev"]) && $_GET["dev"] == "true";
+		$prod	= isset($_GET["prod"]) && $_GET["prod"] == "true";
 		$files	= file($path . ".files");
 
 		$output	= "";
@@ -11,7 +11,7 @@
 
 		$output	= fStripTags($output, "Source");
 
-		if (!$dev) {
+		if ($prod) {
 			$output	= fStripTags($output, "Debug");
 			$output	= fStripTags($output, "Guard");
 		}
@@ -30,8 +30,7 @@
 		echo "GET path parameter missing.";
 	}
 
-	function fStripTags($sInput, $sTagName)
-	{
+	function fStripTags($sInput, $sTagName) {
 		return preg_replace('/\/\/\->' . $sTagName . '.+\/\/<\-' . $sTagName . '/Us', "", $sInput);
 	}
 ?>

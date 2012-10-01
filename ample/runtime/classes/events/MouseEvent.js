@@ -1,7 +1,7 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2009 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
@@ -23,8 +23,7 @@ cMouseEvent.prototype.screenX		= null;
 cMouseEvent.prototype.screenY		= null;
 cMouseEvent.prototype.shiftKey		= null;
 
-cMouseEvent.prototype.initMouseEvent	= function(sType, bCanBubble, bCancelable, oView, nDetail, nScreenX, nScreenY, nClientX, nClientY, bCtrlKey, bAltKey, bShiftKey, bMetaKey, nButton, oRelatedTarget)
-{
+cMouseEvent.prototype.initMouseEvent	= function(sType, bCanBubble, bCancelable, oView, nDetail, nScreenX, nScreenY, nClientX, nClientY, bCtrlKey, bAltKey, bShiftKey, bMetaKey, nButton, oRelatedTarget) {
 /*
 //->Guard
 	fGuard(arguments, [
@@ -48,8 +47,7 @@ cMouseEvent.prototype.initMouseEvent	= function(sType, bCanBubble, bCancelable, 
 	this.relatedTarget	= oRelatedTarget;
 };
 
-cMouseEvent.prototype.getModifierState	= function(sModifier)
-{
+cMouseEvent.prototype.getModifierState	= function(sModifier) {
 	switch (sModifier) {
 		case "Alt":		return this.altKey;
 		case "Control":	return this.ctrlKey;

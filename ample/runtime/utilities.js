@@ -1,7 +1,7 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2009 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
@@ -13,7 +13,7 @@ var sGUARD_XML_SYNTAX_WRN				= 'Not well-formed XML',
 	sGUARD_JAVASCRIPT_SYNTAX_WRN		= 'JavaScript syntax error: %0',
 	sQUARD_FRAGMENT_POSITION_WRN		= 'XML fragment is not allowed in head section. Fragment processing skipped',
 	sGUARD_NOT_UNIQUE_ID_WRN			= 'Duplicate ID attribute value "%0" used',
-	sGUARD_NOT_FOUND_SHADOW_WRN			= 'Shadow content was not found. Element "%0" quiried for pseudo-element "%1"',
+	sGUARD_NOT_FOUND_SHADOW_WRN			= 'Shadow content was not found. Element "%0" queried for pseudo-element "%1"',
 	sGUARD_FEATURE_DEPRECATED_WRN		= 'Feature "%0" had been deprecated. Use "%1" instead',
 	sGUARD_UNKNOWN_ELEMENT_NS_WRN		= 'Element "%0" definition is missing from "%1" namespace. Element processing skipped',
 	sGUARD_UNKNOWN_ATTRIBUTE_NS_WRN		= 'Attribute "%0" definition is missing from "%1" namespace. Attribute processing skipped',
@@ -28,7 +28,7 @@ var sGUARD_XML_SYNTAX_WRN				= 'Not well-formed XML',
 function fUtilities_warn(sWarning, aArguments) {
 	var fErrorHandler	= oDOMConfiguration_values["error-handler"];
 	if (fErrorHandler) {
-		var oError	= new cDOMError(fGuardException_format(sWarning, aArguments || []), cDOMError.SEVERITY_WARNING);
+		var oError	= new cDOMError(fAmpleException_format(sWarning, aArguments || []), cDOMError.SEVERITY_WARNING);
 		if (typeof fErrorHandler == "function")
 			fErrorHandler(oError);
 		else
@@ -43,35 +43,33 @@ var hUtilities_uriCache	= {};
  * Returns an array of uri components:
  * [scheme, authority, path, query, fragment]
  */
-function fUtilities_getUriComponents(sUri)
-{
+function fUtilities_getUriComponents(sUri) {
 	var aResult	= hUtilities_uriCache[sUri] ||(hUtilities_uriCache[sUri] = sUri.match(/^(([^:\/?#]+):)?(\/\/([^\/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?/));
 	return [aResult[1], aResult[3], aResult[5], aResult[6], aResult[8]];
 };
 
-function fUtilities_resolveUri(sUri, sBaseUri)
-{
+function fUtilities_resolveUri(sUri, sBaseUri) {
 	if (sUri == '' || sUri.charAt(0) == '#')
 		return sBaseUri;
 
-	var aUri = fUtilities_getUriComponents(sUri);
+	var aUri	= fUtilities_getUriComponents(sUri);
 	if (aUri[0])	// scheme
 		return sUri;
 
-	var aBaseUri = fUtilities_getUriComponents(sBaseUri);
-	aUri[0] = aBaseUri[0];	// scheme
+	var aBaseUri	= fUtilities_getUriComponents(sBaseUri);
+	aUri[0]	= aBaseUri[0];	// scheme
 
 	if (!aUri[1]) {
 		// authority
-		aUri[1] = aBaseUri[1];
+		aUri[1]	= aBaseUri[1];
 
 		// path
 		if (aUri[2].charAt(0) != '/') {
-			var aUriSegments = aUri[2].split('/'),
-				aBaseUriSegments = aBaseUri[2].split('/');
+			var aUriSegments		= aUri[2].split('/'),
+				aBaseUriSegments	= aBaseUri[2].split('/');
 			aBaseUriSegments.pop();
 
-			var nBaseUriStart = aBaseUriSegments[0] == '' ? 1 : 0;
+			var nBaseUriStart	= aBaseUriSegments[0] == '' ? 1 : 0;
 			for (var nIndex = 0, nLength = aUriSegments.length; nIndex < nLength; nIndex++) {
 				if (aUriSegments[nIndex] == '..') {
 					if (aBaseUriSegments.length > nBaseUriStart)
@@ -91,7 +89,7 @@ function fUtilities_resolveUri(sUri, sBaseUri)
 		}
 	}
 
-	var aResult = [];
+	var aResult	= [];
 	if (aUri[0])
 		aResult.push(aUri[0]);
 	if (aUri[1])	// '//'
@@ -106,17 +104,17 @@ function fUtilities_resolveUri(sUri, sBaseUri)
 	return aResult.join('');
 };
 
-function fUtilities_encodeEntities(sValue) {
-	return sValue.replace(/&(?![a-z]+;)/gi, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+function fUtilities_encodeXMLCharacters(sValue) {
+	return sValue.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
 };
 
-function fUtilities_decodeEntities(sValue) {
-	return sValue.replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
+function fUtilities_decodeXMLCharacters(sValue) {
+	return sValue.replace(/&apos;/g, "'").replace(/&quot;/g, '"').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&amp;/g, '&');
 };
 
 function fUtilities_translateStyleSheet(sCSS, sUri) {
 	// 1. Remove namespace declarations
-	var aNameSpaces = sCSS.match(/@namespace\s+([\w-]+\s+)?(url\()?(['"])?[^'";\s]+(['"])?\)?;?/g);
+	var aNameSpaces	= sCSS.match(/@namespace\s+([\w-]+\s+)?(url\()?(['"])?[^'";\s]+(['"])?\)?;?/g);
 	if (aNameSpaces)
 		for (var nIndex = 0; nIndex < aNameSpaces.length; nIndex++)
 			sCSS	= sCSS.replace(aNameSpaces[nIndex], '');
@@ -153,6 +151,9 @@ function fUtilities_translateStyleSheet(sCSS, sUri) {
 		// Rewrite text-overflow
 		sCSS	= sCSS
 					.replace(/(?:\s|;)(text-overflow\s*:\s*)(.+)(\n|;)/gi, sBefore + (bPresto ? 'o' : bGecko ? "moz" : "webkit") + sAfter);
+		// Rewrite transitions
+		sCSS	= sCSS
+					.replace(/(?:\s|;)(transition\-?\w*\s*:\s*)(.+)(\n|;)/gi, sBefore + (bPresto ? 'o' : bGecko ? "moz" : "webkit") + sAfter);
 		//
 		if (!bPresto) {
 			// Rewrite box-shadow
@@ -186,7 +187,7 @@ function fUtilities_translateStyleSheet(sCSS, sUri) {
 			aCSS.push(aRule[1]
 //						.replace(/([\s>+~,])(?:([\w]+)\|)?([\w]+)/g, '$1.$2-$3')		// Element
 						.replace(/\|/g, '-')							// Namespace
-						.replace(/([\s>+~,]|not\()([\w-])/g, '$1.$2')	// Element
+						.replace(/(^|[\s>+~,]|not\()([\w-])/g, '$1.$2')	// Element
 						.replace(/\[([\w-]+)=?([\w-]+)?\]/g, '-$1-$2')	// Attribute
 						.replace(/::/g, '--')							// Pseudo-element
 						.replace(/:nth-child\((\d+)\)/g, '_nth-child-$1')	// Pseudo-class nth-child
@@ -203,7 +204,7 @@ function fUtilities_translateStyleSheet(sCSS, sUri) {
 
 function fUtilities_toCssPropertyName(sName) {
 	for (var nIndex = 1, aValue = sName.split('-'); nIndex < aValue.length; nIndex++)
-    	aValue[nIndex] = aValue[nIndex].substr(0, 1).toUpperCase() + aValue[nIndex].substr(1);
+		aValue[nIndex]	= aValue[nIndex].substr(0, 1).toUpperCase() + aValue[nIndex].substr(1);
 	return aValue.join('');
 };
 

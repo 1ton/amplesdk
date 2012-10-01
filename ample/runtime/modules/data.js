@@ -1,7 +1,7 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2010 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
@@ -14,7 +14,7 @@ function fQuery_data(oQuery, sName, oValue) {
 		fQuery_each(oQuery, function() {
 			var oCache	= oQuery_cache[this.uniqueID];
 			if (!oCache)
-				oCache	= oQuery_cache[this.uniqueID] = {};
+				oCache	= oQuery_cache[this.uniqueID]	= {};
 			if (oValue == null)
 				delete oCache[sName];
 			else
@@ -27,7 +27,7 @@ function fQuery_data(oQuery, sName, oValue) {
 		var oElement= oQuery[0],
 			oCache	= oQuery_cache[oElement.uniqueID];
 		if (!oCache)
-			oCache	= oQuery_cache[oElement.uniqueID] = {};
+			oCache	= oQuery_cache[oElement.uniqueID]	= {};
 		if (typeof sName != "undefined")
 			return oCache[sName];
 		else

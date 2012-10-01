@@ -1,7 +1,7 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2010 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
@@ -19,10 +19,16 @@ cQuery.prototype.text	= function(sValue) {
 	if (arguments.length > 0) {
 		// Replace children with a text node
 		fQuery_each(this, function() {
-			while (this.lastChild)
-				fElement_removeChild(this, this.lastChild);
+			var oText	= null;
+			if (this.childNodes.length == 1 && (this.firstChild.nodeType == 3 || this.firstChild.nodeType == 4))
+				oText	= this.firstChild;
+			else {
+				while (this.lastChild)
+					fElement_removeChild(this, this.lastChild);
+				oText	= fElement_appendChild(this, fDocument_createTextNode(this.ownerDocument, ''));
+			}
 			// Add child
-			fElement_appendChild(this, fDocument_createTextNode(this.ownerDocument, cString(sValue)));
+			fCharacterData_replaceData(oText, 0, oText.length, cString(sValue));
 		});
 		return this;
 	}
@@ -79,7 +85,7 @@ cQuery.prototype.appendTo	= function(vArgument1) {
 			oSelf.each(function() {
 				var oNode	= nIndex ? fNode_cloneNode(this, true) : this;
 				fElement_appendChild(oParent, oNode);
-				oQuery[oQuery.length++] = oNode;
+				oQuery[oQuery.length++]	= oNode;
 			});
 		});
 	}
@@ -109,7 +115,7 @@ cQuery.prototype.prependTo	= function(vArgument1) {
 					fElement_insertBefore(oParent, oNode, oBefore);
 				else
 					fElement_appendChild(oParent, oNode);
-				oQuery[oQuery.length++] = oNode;
+				oQuery[oQuery.length++]	= oNode;
 			});
 		});
 	}
@@ -136,7 +142,7 @@ cQuery.prototype.insertBefore	= function(vArgument1) {
 			fQuery_each(oSelf, function() {
 				var oNode	= nIndex ? fNode_cloneNode(this, true) : this;
 				fElement_insertBefore(oParent, oNode, oBefore);
-				oQuery[oQuery.length++] = oNode;
+				oQuery[oQuery.length++]	= oNode;
 			});
 		});
 	}
@@ -166,7 +172,7 @@ cQuery.prototype.insertAfter	= function(vArgument1) {
 					fElement_insertBefore(oParent, oNode, oBefore == this ? oBefore.nextSibling : oBefore);
 				else
 					fElement_appendChild(oParent, oNode);
-				oQuery[oQuery.length++] = oNode;
+				oQuery[oQuery.length++]	= oNode;
 			});
 		});
 	}
@@ -193,7 +199,7 @@ cQuery.prototype.replaceAll	= function(vArgument1) {
 			fQuery_each(oSelf, function() {
 				var oNode	= nIndex ? fNode_cloneNode(this, true) : this;
 				fElement_insertBefore(oParent, oNode, oBefore);
-				oQuery[oQuery.length++] = oNode;
+				oQuery[oQuery.length++]	= oNode;
 			});
 			fElement_removeChild(this.parentNode, this);
 		});

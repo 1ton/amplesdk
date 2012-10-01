@@ -1,6 +1,6 @@
 /*
  * Source-only loader (fallback for missing Apache+mod_rewrite+PHP installation)
- * Note: Strips "Source"/"Debug"/"Guard" tags from source code
+ * Note: Strips "Source" tags from source code
  */
 
 (function() {
@@ -17,7 +17,7 @@
 	}
 
 	// get files list
-	var oRequest = new cXMLHttpRequest;
+	var oRequest	= new cXMLHttpRequest;
 	oRequest.open("GET", path + ".files", false);
 	oRequest.send(null);
 	var files	= oRequest.responseText.split(/\n/g);
@@ -25,10 +25,10 @@
 	// load files
 	for (var n = 0, file; n < files.length; n++) {
 		if ((file = files[n].replace(/^\s+/, "").replace(/\s+$/, "")) != '' && file.substr(0, 1) != "#") {
-			var oRequest = new cXMLHttpRequest;
+			var oRequest	= new cXMLHttpRequest;
 			oRequest.open("GET", path + file, false);
 			oRequest.send(null);
-			source[source.length]	= fStripTags(fStripTags(fStripTags(oRequest.responseText, "Source"), "Debug"), "Guard");
+			source[source.length]	= fStripTags(oRequest.responseText, "Source");
 		}
 	}
 	var oScript	= document.getElementsByTagName("head")[0].appendChild(document.createElement("script"));

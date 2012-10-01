@@ -1,7 +1,7 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2009 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
@@ -14,8 +14,7 @@ cFocusEvent.prototype.eventInterface	= "FocusEvent";
 // nsIDOMFocusEvent
 cFocusEvent.prototype.relatedTarget	= null;
 
-cFocusEvent.prototype.initFocusEvent	= function(sType, bCanBubble, bCancelable, oView, nDetail, oRelatedTarget)
-{
+cFocusEvent.prototype.initFocusEvent	= function(sType, bCanBubble, bCancelable, oView, nDetail, oRelatedTarget) {
 	this.initUIEvent(sType, bCanBubble, bCancelable, oView, nDetail);
 
 	this.relatedTarget	= oRelatedTarget;

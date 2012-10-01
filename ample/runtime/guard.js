@@ -1,7 +1,7 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2010 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
@@ -34,7 +34,7 @@ function fGuard(aArguments, aParameters, oObject) {
 //<-Debug
 
 	// Check constructor
-	if (oObject && fCaller && oObject instanceof fCaller)
+	if (oObject && fCaller && fCaller != fEval && oObject instanceof fCaller)
 		throw new cAmpleException(cAmpleException.CANNOT_ACCESS_DOM_ERR, fCaller);
 
 	// Iterate over parameters list

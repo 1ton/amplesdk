@@ -1,7 +1,7 @@
 /*
  * Ample SDK - JavaScript GUI Framework
  *
- * Copyright (c) 2010 Sergey Ilinsky
+ * Copyright (c) 2012 Sergey Ilinsky
  * Dual licensed under the MIT and GPL licenses.
  * See: http://www.amplesdk.com/about/licensing/
  *
@@ -54,8 +54,8 @@ ample.extend({
 	xslt:	function(vXml, vXsl, fCallback, aParameters) {
 		// validate API
 		ample.guard(arguments, [
-			["xml", 		Object],
-			["xsl", 		Object],
+			["xml",			Object],
+			["xsl",			Object],
 			["callback",	Function,	true],
 			["parameters",	Array,		true,	true]
 		]);
@@ -70,8 +70,8 @@ ample.extend(ample.classes.Query.prototype, {
 	xslt:	function(vXml, vXsl, fCallback, aParameters) {
 		// validate API
 		ample.guard(arguments, [
-			["xml", 		Object],
-			["xsl", 		Object],
+			["xml",			Object],
+			["xsl",			Object],
 			["callback",	Function,	true],
 			["parameters",	Array,		true,	true]
 		]);
